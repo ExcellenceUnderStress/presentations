@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, lazy, Suspense, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { optimizeAnimations } from "../../utils/performance";
 import "./globals.css";
 
@@ -22,10 +22,12 @@ const SafetySlide = lazy(() => import("../../components/slides/SafetySlide"));
 const CaseStudiesSlide = lazy(() => import("../../components/slides/CaseStudiesSlide"));
 
 // Type definitions for slide props
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SlideComponent = React.ComponentType<any>;
 
 interface SlideConfig {
   Component: SlideComponent;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props: Record<string, any>;
 }
 
@@ -160,7 +162,7 @@ export default function PresentationPage() {
           </motion.div>
         </div>
       }>
-        <Component key={current} {...slideProps_combined as any} />
+        <Component key={current} {...slideProps_combined as Record<string, unknown>} />
       </Suspense>
     </div>
   );

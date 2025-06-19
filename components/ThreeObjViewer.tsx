@@ -113,14 +113,20 @@ const ThreeObjViewer: React.FC<ThreeObjViewerProps> = ({ objUrl }) => {
 
     // Cleanup
     return () => {
+      // Capture the current mount and renderer references to avoid stale closure issues
+      const currentMount = mountRef.current;
+      const currentRenderer = rendererRef.current;
+      
       window.removeEventListener('resize', handleResize);
       if (frameRef.current) {
         cancelAnimationFrame(frameRef.current);
       }
-      if (mountRef.current && renderer.domElement) {
-        mountRef.current.removeChild(renderer.domElement);
+      if (currentMount && currentRenderer?.domElement) {
+        currentMount.removeChild(currentRenderer.domElement);
       }
-      renderer.dispose();
+      if (currentRenderer) {
+        currentRenderer.dispose();
+      }
     };
   }, [objUrl]);
 

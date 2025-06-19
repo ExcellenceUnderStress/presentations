@@ -1,25 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { motion, useAnimation } from "framer-motion";
+import { motion } from "framer-motion";
 
 const OurProcessSlide: React.FC<{ onPrev?: () => void; onNext?: () => void }> = ({ onPrev, onNext }) => {
   const [activeStep, setActiveStep] = useState(0);
-  const controls = useAnimation();
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowUp" && onPrev) onPrev();
-      if (e.key === "ArrowDown" && onNext) onNext();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onPrev, onNext]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveStep((prev) => (prev + 1) % timelineSteps.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
 
   const timelineSteps = [
     {
@@ -55,6 +38,22 @@ const OurProcessSlide: React.FC<{ onPrev?: () => void; onNext?: () => void }> = 
       position: "right"
     }
   ];
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowUp" && onPrev) onPrev();
+      if (e.key === "ArrowDown" && onNext) onNext();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onPrev, onNext]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % timelineSteps.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [timelineSteps.length]);
 
   return (
     <motion.div
