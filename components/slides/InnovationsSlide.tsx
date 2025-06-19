@@ -106,14 +106,14 @@ const InnovationsSlide: React.FC<{ onBack?: () => void; onNext?: () => void }> =
           if (iframeWindow) {
             iframeWindow.scrollBy(0, 1);
           }
-        } catch (e) {
+        } catch {
           // CORS will block this
         }
       }, 50); // Very slow scroll
 
       return () => clearInterval(scrollInterval);
     }
-  }, [scene]);
+  }, [scene, detailScenes]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -162,9 +162,9 @@ const InnovationsSlide: React.FC<{ onBack?: () => void; onNext?: () => void }> =
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [scene, imageIndex, onBack, onNext]);
+  }, [scene, imageIndex, onBack, onNext, detailScenes]);
 
-  const renderMediaContent = (sceneData: any, currentImageIndex: number) => {
+  const renderMediaContent = (sceneData: typeof detailScenes[0], currentImageIndex: number) => {
     const imagesLength = sceneData.images?.length || 0;
     const showWebsite = sceneData.hasWebsite && currentImageIndex === imagesLength;
     const show3DModel = sceneData.has3DModel && currentImageIndex === imagesLength + (sceneData.hasWebsite ? 1 : 0);

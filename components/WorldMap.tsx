@@ -11,7 +11,7 @@ const mapStyles = {
 const defaultCenter = { lat: 47.6062, lng: -122.3321 }; // Seattle, WA
 
 const WorldMap = () => {
-  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
 
   useEffect(() => {
     gsap.from('.map-container', { opacity: 0, y: 50, duration: 1 });

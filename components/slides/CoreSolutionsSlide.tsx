@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 
 const CoreSolutionsSlide: React.FC<{ 
@@ -9,7 +9,6 @@ const CoreSolutionsSlide: React.FC<{
   onSafetyClick?: () => void;
   onNext?: () => void 
 }> = ({ onPrev, onRepairClick, onBarrierClick, onInnovationsClick, onSafetyClick, onNext }) => {
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -93,8 +92,6 @@ const CoreSolutionsSlide: React.FC<{
                 animate={{ opacity: 1 }}
                 transition={{ delay: solution.delay, duration: 0 }}
                 onClick={solution.onClick}
-                onMouseEnter={() => setHoveredCard(index)}
-                onMouseLeave={() => setHoveredCard(null)}
               >
                 <div className={`relative bg-gradient-to-br ${solution.bgGradient} p-8 rounded-3xl border border-white/10 backdrop-blur-sm h-full hover:border-white/20 transition-all`}>
                   <h3 className={`text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${solution.gradient} mb-2`}>

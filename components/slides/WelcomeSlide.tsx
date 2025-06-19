@@ -11,7 +11,6 @@ const WelcomeSlide: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
   const promptRef = useRef<HTMLDivElement>(null);
   
   const [showPrompt, setShowPrompt] = useState(false);
-  const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [particles, setParticles] = useState<Array<{left: number, top: number, delay: number, duration: number}>>([]);
 
@@ -95,14 +94,8 @@ const WelcomeSlide: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onNext]);
 
-  const handleVideoLoad = () => {
-    setVideoLoaded(true);
-    setVideoError(false);
-  };
-
   const handleVideoError = () => {
     setVideoError(true);
-    setVideoLoaded(false);
   };
 
   return (
@@ -124,7 +117,6 @@ const WelcomeSlide: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
             playsInline
             className="absolute inset-0 w-full h-full object-cover"
             poster="/api/placeholder/1920/1080"
-            onLoadedData={handleVideoLoad}
             onError={handleVideoError}
           >
             <source

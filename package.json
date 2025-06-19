@@ -25,6 +25,7 @@
     "spectacle": "^10.2.0",
     "swiper": "^11.2.8",
     "three": "^0.177.0",
+    "three-stdlib": "^2.36.0",
     "topojson": "^3.0.2",
     "victory": "^37.3.6",
     "world-atlas": "^2.0.2"
