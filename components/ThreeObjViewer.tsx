@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 interface ThreeObjViewerProps {
   objUrl: string;
@@ -129,4 +129,4 @@ const ThreeObjViewer: React.FC<ThreeObjViewerProps> = ({ objUrl }) => {
   );
 };
 
-export default ThreeObjViewer; 
+export default ThreeObjViewer;
