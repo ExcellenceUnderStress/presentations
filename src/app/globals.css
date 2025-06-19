@@ -204,86 +204,93 @@ body {
   border-color: var(--accent);
 }
 
-/* Enhanced animations */
+/* Performance optimized animations with GPU acceleration */
 @keyframes slideInFromRight {
   from {
     opacity: 0;
-    transform: translateX(100px);
+    transform: translate3d(100px, 0, 0);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes slideInFromLeft {
   from {
     opacity: 0;
-    transform: translateX(-100px);
+    transform: translate3d(-100px, 0, 0);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translate3d(0, 30px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes float {
   0%, 100% {
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translate3d(0, -10px, 0);
   }
 }
 
 @keyframes pulse {
   0% {
-    transform: scale(1);
+    transform: scale3d(1, 1, 1);
     opacity: 1;
   }
   50% {
-    transform: scale(1.05);
+    transform: scale3d(1.05, 1.05, 1);
     opacity: 0.8;
   }
   100% {
-    transform: scale(1);
+    transform: scale3d(1, 1, 1);
     opacity: 1;
   }
 }
 
 .animate-slideInRight {
-  animation: slideInFromRight 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: slideInFromRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform, opacity;
 }
 
 .animate-slideInLeft {
-  animation: slideInFromLeft 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: slideInFromLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform, opacity;
 }
 
 .animate-fadeIn {
-  animation: fadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: fadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform, opacity;
 }
 
 .animate-float {
   animation: float 6s ease-in-out infinite;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .animate-pulse {
   animation: pulse 2s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
 .animate-scroll {
   animation: scroll 2s ease-in-out infinite;
+  will-change: transform;
 }
 
 /* Staggered animations for grids */
@@ -453,10 +460,11 @@ body {
   animation: fadeInSlow 2.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
-/* Parallax effect for sections */
+/* Parallax effect for sections with GPU optimization */
 .presentation-section > * {
   transform: translateZ(0);
-  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 /* Enhanced grid animations */
@@ -529,42 +537,24 @@ html, body {
   overflow: hidden;
 }
 
-/* Custom animations for presentation */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
+/* Remove duplicate animations - already defined above */
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-50px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.8; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.05); }
-}
-
-/* Utility classes */
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.6s ease-out forwards;
-}
-
-.animate-slideInLeft {
-  animation: slideInLeft 0.5s ease-out forwards;
-}
-
+/* Utility classes with performance optimization */
 .animate-pulseGlow {
-  animation: pulseGlow 2s ease-in-out infinite;
+  animation: pulse 2s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* GPU accelerated base elements */
+video, canvas, iframe {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Optimize heavy elements */
+.victory-container {
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 /* Presentation specific styles */
@@ -713,5 +703,32 @@ html, body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    animation-delay: 0s !important;
   }
+  
+  .animate-float,
+  .animate-pulse,
+  .animate-slideInRight,
+  .animate-slideInLeft,
+  .animate-fadeIn {
+    animation: none !important;
+  }
+}
+
+/* Performance optimizations */
+* {
+  /* Prevent layout thrashing */
+  contain: layout style;
+}
+
+/* Optimize text rendering */
+body {
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reduce paint areas */
+.fixed, .absolute {
+  will-change: auto;
 }

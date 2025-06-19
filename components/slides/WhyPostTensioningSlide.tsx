@@ -11,37 +11,28 @@ const WhyPostTensioningSlide: React.FC<{ onPrev?: () => void; onNext?: () => voi
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onPrev, onNext]);
 
-  // Chart data for Traditional vs Post-Tensioned comparison
-  const chartData = [
-    {
-      category: "Concrete Use",
-      traditional: { value: 100, label: "100%" },
-      pt: { value: 75, label: "75%" },
-      improvement: "25% Less"
-    },
-    {
-      category: "Rebar Use", 
-      traditional: { value: 100, label: "100%" },
-      pt: { value: 35, label: "35%" },
-      improvement: "65% Less"
-    },
-    {
-      category: "Span Length",
-      traditional: { value: 60, label: "30 ft" },
-      pt: { value: 100, label: "50+ ft" },
-      improvement: "67% More"
-    },
-    {
-      category: "Timeline",
-      traditional: { value: 100, label: "16 mo" },
-      pt: { value: 35, label: "6 mo" },
-      improvement: "65% Faster"
-    }
+  // Material & Cost Efficiency Stats
+  const materialStats = [
+    { icon: "🏗️", stat: "25%", label: "Less Concrete", color: "from-blue-500 to-cyan-500" },
+    { icon: "⚡", stat: "65%", label: "Less Reinforcing Steel", color: "from-purple-500 to-pink-500" },
+    { icon: "📉", stat: "30%", label: "Reduction in Building Mass", color: "from-green-500 to-emerald-500" }
   ];
 
-  const keyBullets = [
-    "Allows curves, long spans, and cantilevers", 
-    "Maximizes floor-to-ceiling height",
+  // Structural Advantages
+  const structuralAdvantages = [
+    { icon: "📏", text: "Thinner slabs", color: "text-blue-400" },
+    { icon: "🌉", text: "Longer spans & cantilevers", color: "text-purple-400" },
+    { icon: "🔧", text: "Fewer joints, reduced cracking/shrinking", color: "text-green-400" },
+    { icon: "🛡️", text: "Improved durability & lower maintenance", color: "text-orange-400" },
+    { icon: "⚖️", text: "Controlled deflections (load balancing)", color: "text-cyan-400" }
+  ];
+
+  // Design Flexibility & Site Compatibility
+  const designFlexibility = [
+    { icon: "🎨", text: "Enables curved geometries", color: "text-pink-400" },
+    { icon: "📐", text: "More floor-to-floor height", color: "text-indigo-400" },
+    { icon: "🌍", text: "Works well on soft or expansive soils", color: "text-yellow-400" },
+    { icon: "🏗️", text: "Reduces foundation loads", color: "text-red-400" }
   ];
 
   return (
@@ -79,214 +70,127 @@ const WhyPostTensioningSlide: React.FC<{ onPrev?: () => void; onNext?: () => voi
             </p>
           </motion.div>
 
-          {/* Main Content Grid - 3 Column Layout */}
-          <div className="grid lg:grid-cols-12 gap-8 items-start">
+          {/* Main Content - Three Section Layout */}
+          <div className="space-y-12">
             
-            {/* Center: Key Bullets */}
+            {/* Material & Cost Efficiency Section */}
             <motion.div
-              className="lg:col-span-3"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.8 }}
             >
-              <div className="space-y-6">
-                {keyBullets.map((bullet, index) => (
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold text-white mb-2 flex items-center justify-center gap-3">
+                  <span className="text-3xl">💰</span>
+                  Material & Cost Efficiency
+                </h3>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-6">
+                {materialStats.map((item, index) => (
                   <motion.div
                     key={index}
-                    className="flex items-center gap-4 bg-slate-800/30 p-4 rounded-xl border border-gray-600/30"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-gradient-to-br from-slate-800/60 to-slate-900/40 p-6 rounded-2xl border border-gray-600/30 text-center"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 1.0 + (index * 0.2), duration: 0.6 }}
+                    whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
                   >
-                    <div className="text-3xl">🎨</div>
-                    <div>
-                      <p className="text-lg text-white font-medium leading-relaxed">{bullet}</p>
+                    <div className="text-4xl mb-3">{item.icon}</div>
+                    <div className={`text-4xl font-bold bg-gradient-to-r ${item.color} bg-clip-text text-transparent mb-2`}>
+                      {item.stat}
+                    </div>
+                    <div className="text-white font-medium text-lg">{item.label}</div>
+                    
+                    {/* Animated progress bar */}
+                    <div className="mt-4 bg-gray-700 h-2 rounded-full overflow-hidden">
+                      <motion.div
+                        className={`h-full bg-gradient-to-r ${item.color} rounded-full`}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${100 - parseInt(item.stat)}%` }}
+                        transition={{ delay: 1.5 + (index * 0.2), duration: 1.2, ease: "easeOut" }}
+                      />
                     </div>
                   </motion.div>
                 ))}
               </div>
             </motion.div>
 
-            {/* Right Side: Full-Size Charts */}
-            <div className="lg:col-span-6">
-              <div className="space-y-6">
-                {/* Charts Grid - Full Size */}
-                <div className="grid grid-cols-2 gap-6">
-                  
-                  {/* Concrete Use Chart */}
-                  <motion.div
-                    className="bg-gradient-to-br from-slate-800/50 to-blue-900/30 p-6 rounded-2xl border border-blue-500/20"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 1.4, duration: 0.6 }}
-                  >
-                    <h4 className="text-xl font-bold text-white mb-4 text-center">Concrete Use</h4>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-gray-400">Traditional</span>
-                        <span className="text-gray-400">100%</span>
-                      </div>
-                      <div className="bg-gray-600 h-4 rounded-lg relative overflow-hidden">
-                        <motion.div 
-                          className="bg-gray-500 h-full rounded-lg"
-                          initial={{ width: 0 }}
-                          animate={{ width: "100%" }}
-                          transition={{ delay: 2.0, duration: 1 }}
-                        />
-                      </div>
-                      
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-blue-300">Post-Tensioned</span>
-                        <span className="text-blue-400">75%</span>
-                      </div>
-                      <div className="bg-gray-600 h-4 rounded-lg relative overflow-hidden">
-                        <motion.div 
-                          className="bg-gradient-to-r from-blue-500 to-cyan-500 h-full rounded-lg"
-                          initial={{ width: 0 }}
-                          animate={{ width: "75%" }}
-                          transition={{ delay: 2.2, duration: 1 }}
-                        />
-                      </div>
-                    </div>
-                    <div className="text-center mt-3">
-                      <span className="text-green-400 font-semibold text-sm">25% Less</span>
-                    </div>
-                  </motion.div>
-
-                  {/* Rebar Use Chart */}
-                  <motion.div
-                    className="bg-gradient-to-br from-slate-800/50 to-purple-900/30 p-6 rounded-2xl border border-purple-500/20"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 1.6, duration: 0.6 }}
-                  >
-                    <h4 className="text-xl font-bold text-white mb-4 text-center">Rebar Use</h4>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-gray-400">Traditional</span>
-                        <span className="text-gray-400">100%</span>
-                      </div>
-                      <div className="bg-gray-600 h-4 rounded-lg relative overflow-hidden">
-                        <motion.div 
-                          className="bg-gray-500 h-full rounded-lg"
-                          initial={{ width: 0 }}
-                          animate={{ width: "100%" }}
-                          transition={{ delay: 2.4, duration: 1 }}
-                        />
-                      </div>
-                      
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-purple-300">Post-Tensioned</span>
-                        <span className="text-purple-400">35%</span>
-                      </div>
-                      <div className="bg-gray-600 h-4 rounded-lg relative overflow-hidden">
-                        <motion.div 
-                          className="bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-lg"
-                          initial={{ width: 0 }}
-                          animate={{ width: "35%" }}
-                          transition={{ delay: 2.6, duration: 1 }}
-                        />
-                      </div>
-                    </div>
-                    <div className="text-center mt-3">
-                      <span className="text-green-400 font-semibold text-sm">65% Less</span>
-                    </div>
-                  </motion.div>
-
-                  {/* Span Length Chart */}
-                  <motion.div
-                    className="bg-gradient-to-br from-slate-800/50 to-emerald-900/30 p-6 rounded-2xl border border-emerald-500/20"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 1.8, duration: 0.6 }}
-                  >
-                    <h4 className="text-xl font-bold text-white mb-4 text-center">Span Length</h4>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-gray-400">Traditional</span>
-                        <span className="text-gray-400">30 ft</span>
-                      </div>
-                      <div className="bg-gray-600 h-4 rounded-lg relative overflow-hidden">
-                        <motion.div 
-                          className="bg-gray-500 h-full rounded-lg"
-                          initial={{ width: 0 }}
-                          animate={{ width: "60%" }}
-                          transition={{ delay: 2.8, duration: 1 }}
-                        />
-                      </div>
-                      
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-emerald-300">Post-Tensioned</span>
-                        <span className="text-emerald-400">50+ ft</span>
-                      </div>
-                      <div className="bg-gray-600 h-4 rounded-lg relative overflow-hidden">
-                        <motion.div 
-                          className="bg-gradient-to-r from-emerald-500 to-green-500 h-full rounded-lg"
-                          initial={{ width: 0 }}
-                          animate={{ width: "100%" }}
-                          transition={{ delay: 3.0, duration: 1 }}
-                        />
-                      </div>
-                    </div>
-                    <div className="text-center mt-3">
-                      <span className="text-green-400 font-semibold text-sm">67% More</span>
-                    </div>
-                  </motion.div>
-
-                  {/* Timeline Chart */}
-                  <motion.div
-                    className="bg-gradient-to-br from-slate-800/50 to-orange-900/30 p-6 rounded-2xl border border-orange-500/20"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 2.0, duration: 0.6 }}
-                  >
-                    <h4 className="text-xl font-bold text-white mb-4 text-center">Timeline</h4>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-gray-400">Traditional</span>
-                        <span className="text-gray-400">16 mo</span>
-                      </div>
-                      <div className="bg-gray-600 h-4 rounded-lg relative overflow-hidden">
-                        <motion.div 
-                          className="bg-gray-500 h-full rounded-lg"
-                          initial={{ width: 0 }}
-                          animate={{ width: "100%" }}
-                          transition={{ delay: 3.2, duration: 1 }}
-                        />
-                      </div>
-                      
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-orange-300">Post-Tensioned</span>
-                        <span className="text-orange-400">6 mo</span>
-                      </div>
-                      <div className="bg-gray-600 h-4 rounded-lg relative overflow-hidden">
-                        <motion.div 
-                          className="bg-gradient-to-r from-orange-500 to-red-500 h-full rounded-lg"
-                          initial={{ width: 0 }}
-                          animate={{ width: "35%" }}
-                          transition={{ delay: 3.4, duration: 1 }}
-                        />
-                      </div>
-                    </div>
-                    <div className="text-center mt-3">
-                      <span className="text-green-400 font-semibold text-sm">65% Faster</span>
-                    </div>
-                  </motion.div>
-                </div>
-
-                {/* Summary Text */}
-                <motion.div
-                  className="bg-slate-800/30 p-4 rounded-xl border border-gray-600/30"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 3.8, duration: 0.6 }}
-                >
-                  <p className="text-sm text-gray-400 text-center">
-                    PT systems outperform in every critical metric executives care about: speed, cost, risk, and longevity.
-                  </p>
-                </motion.div>
+            {/* Structural Advantages Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.8, duration: 0.8 }}
+            >
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold text-white mb-2 flex items-center justify-center gap-3">
+                  <span className="text-3xl">🏗️</span>
+                  Structural Advantages
+                </h3>
               </div>
-            </div>
+              
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {structuralAdvantages.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    className="bg-slate-800/40 p-4 rounded-xl border border-gray-600/20 flex items-center gap-3"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 2.2 + (index * 0.1), duration: 0.5 }}
+                    whileHover={{ x: 5, transition: { duration: 0.2 } }}
+                  >
+                    <div className="text-2xl">{item.icon}</div>
+                    <div className={`text-sm font-medium ${item.color}`}>{item.text}</div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Design Flexibility & Site Compatibility Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.8, duration: 0.8 }}
+            >
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold text-white mb-2 flex items-center justify-center gap-3">
+                  <span className="text-3xl">🎯</span>
+                  Design Flexibility & Site Compatibility
+                </h3>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                {designFlexibility.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    className="bg-slate-800/40 p-4 rounded-xl border border-gray-600/20 flex items-center gap-3"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 3.2 + (index * 0.1), duration: 0.5 }}
+                    whileHover={{ x: -5, transition: { duration: 0.2 } }}
+                  >
+                    <div className="text-2xl">{item.icon}</div>
+                    <div className={`text-sm font-medium ${item.color}`}>{item.text}</div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Summary Call-to-Action */}
+            <motion.div
+              className="text-center bg-gradient-to-r from-blue-900/30 to-purple-900/30 p-8 rounded-2xl border border-blue-500/20"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 3.8, duration: 0.8 }}
+            >
+              <h4 className="text-xl font-bold text-white mb-3">The Bottom Line</h4>
+              <p className="text-gray-300 text-lg leading-relaxed max-w-4xl mx-auto">
+                Post-tensioning delivers measurable improvements across every metric that matters: 
+                <span className="text-green-400 font-semibold"> reduced material costs</span>, 
+                <span className="text-blue-400 font-semibold"> enhanced structural performance</span>, and 
+                <span className="text-purple-400 font-semibold"> unprecedented design freedom</span>.
+              </p>
+            </motion.div>
           </div>
         </div>
       </div>
@@ -294,4 +198,4 @@ const WhyPostTensioningSlide: React.FC<{ onPrev?: () => void; onNext?: () => voi
   );
 };
 
-export default WhyPostTensioningSlide; 
+export default WhyPostTensioningSlide;

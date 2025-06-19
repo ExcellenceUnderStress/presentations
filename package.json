@@ -26,6 +26,7 @@
     "swiper": "^11.2.8",
     "three": "^0.177.0",
     "topojson": "^3.0.2",
+    "victory": "^37.3.6",
     "world-atlas": "^2.0.2"
   },
   "devDependencies": {

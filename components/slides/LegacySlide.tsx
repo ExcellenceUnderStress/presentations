@@ -6,13 +6,25 @@ const LegacySlide: React.FC<{ onPrev?: () => void; onVideoEnd?: () => void }> = 
   const [videoEnded, setVideoEnded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!videoRef.current) return;
     videoRef.current.currentTime = 0;
-    videoRef.current.play();
+    
+    // Try to play with sound, but fallback to muted if blocked
+    const playPromise = videoRef.current.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // If autoplay with sound fails, mute and try again
+        if (videoRef.current) {
+          videoRef.current.muted = true;
+          videoRef.current.play();
+        }
+      });
+    }
   }, []);
 
   const handleVideoEnd = () => {
@@ -23,6 +35,12 @@ const LegacySlide: React.FC<{ onPrev?: () => void; onVideoEnd?: () => void }> = 
   };
 
   const handleClick = useCallback((event: React.MouseEvent) => {
+    // Enable sound on first user interaction
+    if (!hasUserInteracted && videoRef.current) {
+      videoRef.current.muted = false;
+      setHasUserInteracted(true);
+    }
+
     // If in fullscreen, toggle play/pause
     // Otherwise, advance to next slide (click through)
     if (isFullscreen) {
@@ -41,10 +59,16 @@ const LegacySlide: React.FC<{ onPrev?: () => void; onVideoEnd?: () => void }> = 
         onVideoEnd();
       }
     }
-  }, [isPlaying, isFullscreen, onVideoEnd]);
+  }, [isPlaying, isFullscreen, onVideoEnd, hasUserInteracted]);
 
   const togglePlayPause = useCallback(() => {
     if (!videoRef.current) return;
+    
+    // Enable sound on first user interaction
+    if (!hasUserInteracted) {
+      videoRef.current.muted = false;
+      setHasUserInteracted(true);
+    }
     
     if (isPlaying) {
       videoRef.current.pause();
@@ -52,7 +76,7 @@ const LegacySlide: React.FC<{ onPrev?: () => void; onVideoEnd?: () => void }> = 
       videoRef.current.play();
     }
     setIsPlaying(!isPlaying);
-  }, [isPlaying]);
+  }, [isPlaying, hasUserInteracted]);
 
   const toggleFullscreen = useCallback(async () => {
     if (!containerRef.current) return;
@@ -108,7 +132,7 @@ const LegacySlide: React.FC<{ onPrev?: () => void; onVideoEnd?: () => void }> = 
       <motion.video
         ref={videoRef}
         autoPlay
-        muted
+        muted={!hasUserInteracted}
         playsInline
         className="absolute inset-0 w-full h-full object-cover"
         poster="/api/placeholder/1920/1080"
@@ -149,6 +173,21 @@ const LegacySlide: React.FC<{ onPrev?: () => void; onVideoEnd?: () => void }> = 
               <path d="M8 5v14l11-7z" />
             </svg>
           </div>
+        </motion.div>
+      )}
+
+      {/* Sound indicator */}
+      {!hasUserInteracted && (
+        <motion.div
+          className="absolute top-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded text-sm flex items-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.5 }}
+        >
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+          </svg>
+          Click to enable sound
         </motion.div>
       )}
 

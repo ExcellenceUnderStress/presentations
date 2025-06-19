@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
 
@@ -13,48 +13,75 @@ const WelcomeSlide: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
   const [showPrompt, setShowPrompt] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [particles, setParticles] = useState<Array<{left: number, top: number, delay: number, duration: number}>>([]);
+
+  // Generate particles only on client side to avoid hydration mismatch
+  useEffect(() => {
+    const generatedParticles = [...Array(25)].map(() => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      delay: Math.random() * 5,
+      duration: 4 + Math.random() * 3
+    }));
+    setParticles(generatedParticles);
+  }, []);
 
   useEffect(() => {
     // GSAP animation timeline for content
     const tl = gsap.timeline({ delay: 0.5 });
     
     // Fade in animations with staggered timing
-    tl.fromTo(welcomeRef.current, 
-      { opacity: 0, y: 30 }, 
-      { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
-    )
-    .fromTo(companyRef.current, 
-      { opacity: 0, y: 30 }, 
-      { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 
-      "-=0.5"
-    )
-    .fromTo(taglineRef.current, 
-      { opacity: 0, scale: 0.8 }, 
-      { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" }, 
-      "-=0.3"
-    )
-    .fromTo(descriptionRef.current, 
-      { opacity: 0, y: 20 }, 
-      { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 
-      "-=0.2"
-    );
+    if (welcomeRef.current) {
+      tl.fromTo(welcomeRef.current, 
+        { opacity: 0, y: 30 }, 
+        { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
+      );
+    }
+    
+    if (companyRef.current) {
+      tl.fromTo(companyRef.current, 
+        { opacity: 0, y: 30 }, 
+        { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 
+        "-=0.5"
+      );
+    }
+    
+    if (taglineRef.current) {
+      tl.fromTo(taglineRef.current, 
+        { opacity: 0, scale: 0.8 }, 
+        { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" }, 
+        "-=0.3"
+      );
+    }
+    
+    if (descriptionRef.current) {
+      tl.fromTo(descriptionRef.current, 
+        { opacity: 0, y: 20 }, 
+        { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 
+        "-=0.2"
+      );
+    }
 
     // Pulsing animation for tagline
-    gsap.to(taglineRef.current, {
-      scale: 1.05,
-      duration: 2,
-      repeat: -1,
-      yoyo: true,
-      ease: "power2.inOut"
-    });
+    if (taglineRef.current) {
+      gsap.to(taglineRef.current, {
+        scale: 1.05,
+        duration: 2,
+        repeat: -1,
+        yoyo: true,
+        ease: "power2.inOut"
+      });
+    }
 
     // Show prompt after 3 seconds
     const promptTimer = setTimeout(() => {
       setShowPrompt(true);
-      gsap.fromTo(promptRef.current, 
-        { opacity: 0, y: 20 }, 
-        { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }
-      );
+      if (promptRef.current) {
+        gsap.fromTo(promptRef.current, 
+          { opacity: 0, y: 20 }, 
+          { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }
+        );
+      }
     }, 3000);
 
     return () => clearTimeout(promptTimer);
@@ -155,7 +182,7 @@ const WelcomeSlide: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
               Innovative solutions for your projects.
             </p>
             <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mt-4 leading-relaxed">
-              Join the elite tier of infrastructure innovation where precision meets excellence.
+            
             </p>
           </div>
         </div>
@@ -163,15 +190,15 @@ const WelcomeSlide: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
 
       {/* Ambient particles effect */}
       <div className="absolute inset-0 z-15 pointer-events-none">
-        {[...Array(25)].map((_, i) => (
+        {particles.map((particle, i) => (
           <div
             key={i}
             className="absolute w-1 h-1 bg-blue-400/20 rounded-full animate-float"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${4 + Math.random() * 3}s`
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+              animationDelay: `${particle.delay}s`,
+              animationDuration: `${particle.duration}s`
             }}
           />
         ))}
@@ -193,4 +220,4 @@ const WelcomeSlide: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
   );
 };
 
-export default WelcomeSlide; 
+export default WelcomeSlide;
