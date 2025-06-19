@@ -1,0 +1,380 @@
+{
+  "slides": [
+    {
+      "id": "welcome",
+      "title": "Welcome",
+      "subtitle": "Post Tensioning Solutions LLC",
+      "bullets": [
+        {
+          "text": "Shaun Thompson, our valued partner",
+          "emphasis": "Shaun Thompson",
+          "className": "text-4xl md:text-5xl font-bold text-blue-300"
+        },
+        {
+          "text": "We Stress Excellence",
+          "emphasis": "We Stress Excellence",
+          "className": "text-3xl md:text-4xl font-semibold text-white mt-6"
+        },
+        {
+          "text": "Specialized solutions for complex PT challenges",
+          "className": "text-xl md:text-2xl text-gray-300 mt-4"
+        }
+      ],
+      "visual": {
+        "type": "video",
+        "src": "s3://post-tension-assets/videos/drone.mp4",
+        "fallback": "/assets/images/office.jpg",
+        "overlay": true
+      },
+      "background": "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800"
+    },
+    {
+      "id": "our-legacy",
+      "title": "Our Legacy",
+      "subtitle": "Building Excellence for Over 50 Years",
+      "bullets": [
+        {
+          "text": "50+ years leading innovation",
+          "emphasis": "50+ years",
+          "className": "text-3xl md:text-4xl font-bold text-blue-300"
+        },
+        {
+          "text": "Projects across the U.S. and internationally",
+          "emphasis": "Global projects",
+          "className": "text-xl md:text-2xl text-gray-300 mt-4"
+        },
+        {
+          "text": "Family-owned, hands-on leadership",
+          "emphasis": "Family-owned",
+          "className": "text-xl md:text-2xl text-gray-300 mt-4"
+        },
+        {
+          "text": "Trusted by contractors, developers, DOTs",
+          "emphasis": "Trusted",
+          "className": "text-xl md:text-2xl text-gray-300 mt-4"
+        }
+      ],
+      "visual": {
+        "type": "map",
+        "component": "WorldMap",
+        "props": {
+          "autoRotate": true,
+          "pinDelay": 5000
+        }
+      },
+      "background": "bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800"
+    },
+    {
+      "id": "why-post-tensioning",
+      "title": "Why Post-Tensioning Matters",
+      "subtitle": "The Engineering Edge That Saves Money",
+      "bullets": [
+        {
+          "text": "Thinner slabs. Longer spans.",
+          "emphasis": "Thinner slabs",
+          "className": "text-2xl md:text-3xl font-bold text-blue-300"
+        },
+        {
+          "text": "20% savings in concrete and steel",
+          "emphasis": "20% savings",
+          "className": "text-2xl md:text-3xl font-bold text-green-400"
+        },
+        {
+          "text": "Design flexibility, fewer cracks",
+          "emphasis": "fewer cracks",
+          "className": "text-xl md:text-2xl text-gray-300 mt-4"
+        },
+        {
+          "text": "Extends structure life 30+ years",
+          "emphasis": "30+ years",
+          "className": "text-xl md:text-2xl text-gray-300 mt-4"
+        }
+      ],
+      "visual": {
+        "type": "chart",
+        "component": "CostComparisonChart",
+        "props": {
+          "title": "Proactive vs Emergency Repair Costs",
+          "animateAfterBullets": true
+        }
+      },
+      "background": "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800"
+    },
+    {
+      "id": "core-solutions",
+      "title": "Core Solutions",
+      "subtitle": "Comprehensive Post-Tensioning Services",
+      "bullets": [
+        {
+          "text": "Strand repair, retrofit, barrier cable",
+          "emphasis": "Strand repair",
+          "className": "text-xl md:text-2xl font-semibold text-blue-300",
+          "icon": "repair"
+        },
+        {
+          "text": "External post-tensioning, slab scanning",
+          "emphasis": "External PT",
+          "className": "text-xl md:text-2xl font-semibold text-blue-300",
+          "icon": "scanning"
+        },
+        {
+          "text": "Specialty consulting for complex structures",
+          "emphasis": "Specialty consulting",
+          "className": "text-xl md:text-2xl font-semibold text-blue-300",
+          "icon": "consulting"
+        },
+        {
+          "text": "Pop-Up Slabs and Re-Anchor Systems",
+          "emphasis": "Pop-Up Slabs",
+          "className": "text-xl md:text-2xl font-semibold text-blue-300",
+          "icon": "systems"
+        }
+      ],
+      "visual": {
+        "type": "video-grid",
+        "src": "s3://post-tension-assets/videos/services.mp4",
+        "duration": 10000,
+        "loop": true
+      },
+      "background": "bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800"
+    },
+    {
+      "id": "fortis-soldier-pile",
+      "title": "Fortis Soldier Pile",
+      "subtitle": "Revolutionary Shoring Innovation",
+      "bullets": [
+        {
+          "text": "Eliminates tiebacks, easements, and raker braces",
+          "emphasis": "No tiebacks",
+          "className": "text-2xl md:text-3xl font-bold text-blue-300"
+        },
+        {
+          "text": "Faster installs, less excavation",
+          "emphasis": "Faster, safer",
+          "className": "text-xl md:text-2xl text-gray-300 mt-4"
+        },
+        {
+          "text": "Engineered for zero lateral movement",
+          "emphasis": "Fully engineered",
+          "className": "text-xl md:text-2xl text-gray-300 mt-4"
+        },
+        {
+          "text": "Perfect for urban efficiency",
+          "emphasis": "Urban efficiency",
+          "className": "text-xl md:text-2xl text-green-400 mt-4"
+        }
+      ],
+      "visual": {
+        "type": "3d-model",
+        "component": "SketchfabEmbed",
+        "props": {
+          "modelId": "fortis-soldier-pile",
+          "autoRotate": true,
+          "background": "/assets/images/construction-bg.jpg"
+        }
+      },
+      "background": "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800"
+    },
+    {
+      "id": "barrier-cable-systems",
+      "title": "Vehicle Barrier Cable Systems",
+      "subtitle": "OSHA-Compliant Safety Solutions",
+      "bullets": [
+        {
+          "text": "Barrier cable design and retrofit",
+          "emphasis": "OSHA-compliant",
+          "className": "text-2xl md:text-3xl font-bold text-blue-300"
+        },
+        {
+          "text": "PTI-compliant anchorage and tensioning",
+          "emphasis": "Load-verified",
+          "className": "text-xl md:text-2xl text-gray-300 mt-4"
+        },
+        {
+          "text": "Installed in over 300 structures",
+          "emphasis": "300+ structures",
+          "className": "text-xl md:text-2xl text-green-400 mt-4"
+        },
+        {
+          "text": "Multiple PT strand options available",
+          "emphasis": "Multiple options",
+          "className": "text-xl md:text-2xl text-gray-300 mt-4"
+        }
+      ],
+      "visual": {
+        "type": "video",
+        "src": "s3://post-tension-assets/videos/barrier.mp4",
+        "fallback": "/assets/images/barrier-system.jpg",
+        "duration": 20000,
+        "loop": true
+      },
+      "background": "bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800"
+    },
+    {
+      "id": "safety-innovation",
+      "title": "Safety & Innovation",
+      "subtitle": "Zero-Failure Safety Record",
+      "bullets": [
+        {
+          "text": "Controlled de-tensioning protocols",
+          "emphasis": "Controlled de-tensioning",
+          "className": "text-2xl md:text-3xl font-bold text-blue-300"
+        },
+        {
+          "text": "Advanced scanning + live strand detection",
+          "emphasis": "GPR scanning",
+          "className": "text-xl md:text-2xl text-gray-300 mt-4"
+        },
+        {
+          "text": "PTI Level 2 certified technicians",
+          "emphasis": "PTI Level 2",
+          "className": "text-xl md:text-2xl text-green-400 mt-4"
+        },
+        {
+          "text": "Comprehensive silica management",
+          "emphasis": "Silica management",
+          "className": "text-xl md:text-2xl text-gray-300 mt-4"
+        }
+      ],
+      "visual": {
+        "type": "animated-sequence",
+        "component": "SafetySequence",
+        "props": {
+          "sequence": "de-tensioning",
+          "background": "/assets/images/safety-process.jpg"
+        }
+      },
+      "background": "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800"
+    },
+    {
+      "id": "case-studies",
+      "title": "Case Studies",
+      "subtitle": "Proven Project Successes",
+      "bullets": [
+        {
+          "text": "High-rise PT retrofit in downtown Seattle",
+          "emphasis": "BASIS Bothell",
+          "className": "text-xl md:text-2xl font-semibold text-blue-300"
+        },
+        {
+          "text": "Barrier cable upgrade for multi-level garage",
+          "emphasis": "Kirkland Urban",
+          "className": "text-xl md:text-2xl font-semibold text-blue-300"
+        },
+        {
+          "text": "Seismic retrofit using external PT",
+          "emphasis": "Fauntleroy Bridge",
+          "className": "text-xl md:text-2xl font-semibold text-blue-300"
+        },
+        {
+          "text": "Complex structural rehabilitation",
+          "emphasis": "Brightwater Plant",
+          "className": "text-xl md:text-2xl font-semibold text-blue-300"
+        }
+      ],
+      "visual": {
+        "type": "carousel",
+        "component": "ProjectCarousel",
+        "props": {
+          "autoAdvance": true,
+          "interval": 5000,
+          "transition": "fade"
+        }
+      },
+      "background": "bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800"
+    },
+    {
+      "id": "industry-leadership",
+      "title": "Industry Leadership",
+      "subtitle": "Recognition & Innovation",
+      "bullets": [
+        {
+          "text": "Contributors to PTI best practices",
+          "emphasis": "PTI contributors",
+          "className": "text-2xl md:text-3xl font-bold text-blue-300"
+        },
+        {
+          "text": "2019 Night of the Stars Award recipient",
+          "emphasis": "2019 Award",
+          "className": "text-xl md:text-2xl text-yellow-400 mt-4"
+        },
+        {
+          "text": "Invited trainers at PT repair seminars",
+          "emphasis": "Industry trainers",
+          "className": "text-xl md:text-2xl text-gray-300 mt-4"
+        },
+        {
+          "text": "Setting post-tensioning repair codes",
+          "emphasis": "Setting codes",
+          "className": "text-xl md:text-2xl text-green-400 mt-4"
+        }
+      ],
+      "visual": {
+        "type": "award-badges",
+        "component": "AwardBadges",
+        "props": {
+          "animateOnReveal": true,
+          "background": "/assets/images/awards-bg.jpg"
+        }
+      },
+      "background": "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800"
+    },
+    {
+      "id": "call-to-action",
+      "title": "Let's Build Together",
+      "subtitle": "Partner with Post Tensioning Solutions",
+      "bullets": [
+        {
+          "text": "Free inspections, proven results",
+          "emphasis": "Free inspections",
+          "className": "text-2xl md:text-3xl font-bold text-green-400"
+        },
+        {
+          "text": "Partner with us, Shaun Thompson",
+          "emphasis": "Partner with us, Shaun",
+          "className": "text-xl md:text-2xl text-blue-300 mt-4"
+        },
+        {
+          "text": "Repair, Fortis, Barrier, PT solutions",
+          "emphasis": "Complete solutions",
+          "className": "text-xl md:text-2xl text-gray-300 mt-4"
+        },
+        {
+          "text": "Contact: info@posttension.com",
+          "emphasis": "info@posttension.com",
+          "className": "text-xl md:text-2xl text-yellow-400 mt-6"
+        }
+      ],
+      "visual": {
+        "type": "contact-cta",
+        "component": "ContactCTA",
+        "props": {
+          "qrCode": "s3://post-tension-assets/qr.png",
+          "pulseEffect": true,
+          "contactForm": true,
+          "background": "/assets/images/partnership-bg.jpg"
+        }
+      },
+      "background": "bg-gradient-to-br from-slate-900 via-green-900 to-slate-800"
+    }
+  ],
+  "navigation": {
+    "prompts": {
+      "continue": "Press → to continue",
+      "reveal": "Press ↓ to reveal",
+      "back": "Press ← to go back"
+    },
+    "timing": {
+      "bulletDelay": 1000,
+      "transitionDuration": 500,
+      "promptDelay": 800
+    }
+  },
+  "theme": {
+    "primary": "text-blue-300",
+    "secondary": "text-gray-300",
+    "accent": "text-green-400",
+    "warning": "text-yellow-400",
+    "background": "bg-slate-900"
+  }
+} 

@@ -1,0 +1,9 @@
+{
+    "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+    "terminal.integrated.suggest.enabled": true,
+    "terminal.integrated.suggest.enableExtensionCompletions": true,
+    "workbench.preferredDarkColorTheme": "Solarized Dark",
+    "workbench.preferredHighContrastColorTheme": "Solarized Light",
+    "workbench.preferredHighContrastLightColorTheme": "Quiet Light",
+    "workbench.preferredLightColorTheme": "Solarized Light"
+}
