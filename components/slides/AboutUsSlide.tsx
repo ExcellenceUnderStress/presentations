@@ -2,10 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
 const AboutUsSlide: React.FC<{ onPrev?: () => void; onNext?: () => void }> = ({ onPrev, onNext }) => {
-  const [yearCount, setYearCount] = useState(0);
-  const [projectCount, setProjectCount] = useState(0);
-  const [trustCount, setTrustCount] = useState(0);
-  
   const numbersRef = useRef(null);
   const isInView = useInView(numbersRef, { once: true, margin: "-100px" });
 
@@ -34,7 +30,7 @@ const AboutUsSlide: React.FC<{ onPrev?: () => void; onNext?: () => void }> = ({ 
       }, delay);
       
       return () => clearTimeout(timer);
-    }, [isInView, end, duration, delay]);
+    }, [end, duration, delay]);
     
     return count;
   };

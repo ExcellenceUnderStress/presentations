@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 const LEGACY_VIDEO = "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/videos/intro.mp4"; // Placeholder video
 
-const LegacySlide: React.FC<{ onPrev?: () => void; onVideoEnd?: () => void }> = ({ onPrev, onVideoEnd }) => {
+const LegacySlide: React.FC<{ onVideoEnd?: () => void }> = ({ onVideoEnd }) => {
   const [videoEnded, setVideoEnded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 

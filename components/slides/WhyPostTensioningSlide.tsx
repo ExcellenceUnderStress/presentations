@@ -11,34 +11,6 @@ const WhyPostTensioningSlide: React.FC<{ onPrev?: () => void; onNext?: () => voi
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onPrev, onNext]);
 
-  // Chart data for Traditional vs Post-Tensioned comparison
-  const chartData = [
-    {
-      category: "Concrete Use",
-      traditional: { value: 100, label: "100%" },
-      pt: { value: 75, label: "75%" },
-      improvement: "25% Less"
-    },
-    {
-      category: "Rebar Use", 
-      traditional: { value: 100, label: "100%" },
-      pt: { value: 35, label: "35%" },
-      improvement: "65% Less"
-    },
-    {
-      category: "Span Length",
-      traditional: { value: 60, label: "30 ft" },
-      pt: { value: 100, label: "50+ ft" },
-      improvement: "67% More"
-    },
-    {
-      category: "Timeline",
-      traditional: { value: 100, label: "16 mo" },
-      pt: { value: 35, label: "6 mo" },
-      improvement: "65% Faster"
-    }
-  ];
-
   const keyBullets = [
     "Allows curves, long spans, and cantilevers", 
     "Maximizes floor-to-ceiling height",

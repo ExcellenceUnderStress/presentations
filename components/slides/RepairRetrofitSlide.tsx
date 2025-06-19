@@ -120,9 +120,9 @@ const RepairRetrofitSlide: React.FC<{ onBack?: () => void; onNext?: () => void }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [scene, imageIndex, onBack, onNext]);
+  }, [scene, imageIndex, onBack, onNext, detailScenes]);
 
-  const renderMediaContent = (sceneData: any, currentImageIndex: number) => {
+  const renderMediaContent = (sceneData: typeof detailScenes[0], currentImageIndex: number) => {
     const imagesLength = sceneData.images?.length || 0;
     const showVideo = sceneData.hasVideo && currentImageIndex === imagesLength;
     

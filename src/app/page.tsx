@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import WelcomeSlide from "../../components/slides/WelcomeSlide";
 import LegacySlide from "../../components/slides/LegacySlide";
 import AboutUsSlide from "../../components/slides/AboutUsSlide";

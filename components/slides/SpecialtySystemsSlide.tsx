@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { gsap } from "gsap";
 
 const SpecialtySystemsSlide: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
   const [currentSubscene, setCurrentSubscene] = useState(0);

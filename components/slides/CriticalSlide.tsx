@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const CriticalSlide: React.FC<{ onPrev?: () => void; onNext?: () => void }> = ({ onPrev, onNext }) => {
   const [state, setState] = useState(0); // 0: Title only, 1: Cards, 2: Gallery
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const sections = [
     {
