@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState, useCallback, lazy, Suspense, useEffect } from "react";
+import React, { useState, useCallback, useMemo, lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import { optimizeAnimations } from "../../utils/performance";
+import { BadgeGroup } from "../../components/BadgeGroup";
 import "./globals.css";
 
 // Lazy load slide components
 const WelcomeSlide = lazy(() => import("../../components/slides/WelcomeSlide"));
+const IntroductionHubSlide = lazy(() => import("../../components/slides/IntroductionHubSlide"));
 const LegacySlide = lazy(() => import("../../components/slides/LegacySlide"));
 const AboutUsSlide = lazy(() => import("../../components/slides/AboutUsSlide"));
 const OurProcessSlide = lazy(() => import("../../components/slides/OurProcessSlide"));
@@ -14,6 +16,7 @@ const WhyPostTensioning1Slide = lazy(() => import("../../components/slides/WhyPo
 const WhyPostTensioning2Slide = lazy(() => import("../../components/slides/WhyPostTensioning2Slide"));
 const WhyPostTensioning3Slide = lazy(() => import("../../components/slides/WhyPostTensioning3Slide"));
 const CriticalSlide = lazy(() => import("../../components/slides/CriticalSlide"));
+const FailuresSlide = lazy(() => import("../../components/slides/FailuresSlide"));
 const CoreSolutionsSlide = lazy(() => import("../../components/slides/CoreSolutionsSlide"));
 const RepairRetrofitSlide = lazy(() => import("../../components/slides/RepairRetrofitSlide"));
 const BarrierCableSlide = lazy(() => import("../../components/slides/BarrierCableSlide"));
@@ -21,148 +24,172 @@ const InnovationsSlide = lazy(() => import("../../components/slides/InnovationsS
 const SafetySlide = lazy(() => import("../../components/slides/SafetySlide"));
 const CaseStudiesSlide = lazy(() => import("../../components/slides/CaseStudiesSlide"));
 
-// Type definitions for slide props
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type SlideComponent = React.ComponentType<any>;
+// Type definitions
+type SolutionType = "overview" | "company" | "repair" | "innovations" | "barrier" | "safety";
 
-interface SlideConfig {
-  Component: SlideComponent;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  props: Record<string, any>;
+interface CommonSlideProps {
+  onNext?: () => void;
+  onPrev?: () => void;
+  onBack?: () => void;
+  onVideoEnd?: () => void;
+  onOverviewClick?: () => void;
+  onAboutUsClick?: () => void;
+  onInnovationClick?: () => void;
+  onJumpToSolutions?: () => void;
+  onSilentRisksClick?: () => void;
+  onHiddenDamageClick?: () => void;
+  onRepairClick?: () => void;
+  onBarrierClick?: () => void;
+  onInnovationsClick?: () => void;
+  onSafetyClick?: () => void;
 }
 
+interface CaseStudiesSlideProp extends CommonSlideProps {
+  solutionType: SolutionType;
+}
+
+interface SlideProps extends CommonSlideProps {
+  solutionType?: SolutionType;
+}
+
+interface SlideConfig {
+  Component: React.ComponentType<any>;
+  props?: Record<string, any>;
+}
+
+// Slide configurations
 const slides: SlideConfig[] = [
-  {
-    Component: WelcomeSlide,
-    props: {},
-  },
-  {
-    Component: LegacySlide,
-    props: {},
-  },
-  {
-    Component: AboutUsSlide,
-    props: {},
-  },
-  {
-    Component: OurProcessSlide,
-    props: {},
-  },
-  {
-    Component: WhyPostTensioning1Slide,
-    props: {},
-  },
-  {
-    Component: WhyPostTensioning2Slide,
-    props: {},
-  },
-  {
-    Component: WhyPostTensioning3Slide,
-    props: {},
-  },
-  {
-    Component: CriticalSlide,
-    props: {},
-  },
-  {
-    Component: CoreSolutionsSlide,
-    props: {},
-  },
-  {
-    Component: RepairRetrofitSlide,
-    props: {},
-  },
-  {
-    Component: CaseStudiesSlide,
-    props: { solutionType: "repair" as const },
-  },
-  {
-    Component: BarrierCableSlide,
-    props: {},
-  },
-  {
-    Component: CaseStudiesSlide,
-    props: { solutionType: "barrier" as const },
-  },
-  {
-    Component: InnovationsSlide,
-    props: {},
-  },
-  {
-    Component: CaseStudiesSlide,
-    props: { solutionType: "innovations" as const },
-  },
-  {
-    Component: SafetySlide,
-    props: {},
-  },
-  {
-    Component: CaseStudiesSlide,
-    props: { solutionType: "safety" as const },
-  },
+  { Component: WelcomeSlide },
+  { Component: LegacySlide },
+  { Component: IntroductionHubSlide },
+  { Component: WhyPostTensioning1Slide },
+  { Component: WhyPostTensioning2Slide },
+  { Component: WhyPostTensioning3Slide },
+  { Component: CriticalSlide },
+  { Component: FailuresSlide },
+  { Component: CaseStudiesSlide, props: { solutionType: "overview" } },
+  { Component: OurProcessSlide },
+  { Component: CoreSolutionsSlide },
+  { Component: AboutUsSlide },
+  { Component: LegacySlide },
+  { Component: CaseStudiesSlide, props: { solutionType: "company" } },
+  { Component: InnovationsSlide },
+  { Component: BarrierCableSlide },
+  { Component: RepairRetrofitSlide },
+  { Component: SafetySlide },
+  { Component: CaseStudiesSlide, props: { solutionType: "repair" } },
+  { Component: CaseStudiesSlide, props: { solutionType: "innovations" } },
 ];
 
 export default function PresentationPage() {
   const [current, setCurrent] = useState(0);
+  const [lastVisited, setLastVisited] = useState<number | undefined>(undefined);
 
-  useEffect(() => {
-    // Apply performance optimizations
+  React.useEffect(() => {
     optimizeAnimations();
   }, []);
 
+  // Track last visited slide (simplified)
+  const prevCurrentRef = React.useRef(current);
+  React.useEffect(() => {
+    const prevSlide = prevCurrentRef.current;
+    if (prevSlide !== current) {
+      setLastVisited(prevSlide);
+    }
+    prevCurrentRef.current = current;
+  }, [current]);
+
   const goTo = useCallback((idx: number) => {
     if (idx >= 0 && idx < slides.length) setCurrent(idx);
-  }, []);
+  }, [slides.length]);
+
   const goNext = useCallback(() => goTo(current + 1), [current, goTo]);
   const goPrev = useCallback(() => goTo(current - 1), [current, goTo]);
+  
+  // Simplified goBack - just go to lastVisited or goPrev
+  const goBack = useCallback(() => {
+    if (lastVisited !== undefined && lastVisited !== current) {
+      setCurrent(lastVisited);
+    } else {
+      goPrev();
+    }
+  }, [lastVisited, current, goPrev]);
 
-  // Slide-specific navigation props
-  const slideProps = [
-    { onNext: goNext }, // 0: WelcomeSlide
-    { onPrev: goPrev, onVideoEnd: goNext }, // 1: LegacySlide
-    { onPrev: goPrev, onNext: goNext }, // 2: AboutUsSlide
-    { onPrev: goPrev, onNext: goNext }, // 3: OurProcessSlide
-    { onPrev: goPrev, onNext: goNext }, // 4: WhyPostTensioning1Slide
-    { onPrev: goPrev, onNext: goNext }, // 5: WhyPostTensioning2Slide
-    { onPrev: goPrev, onNext: goNext }, // 6: WhyPostTensioning3Slide
-    { onPrev: goPrev, onNext: goNext }, // 7: CriticalSlide
-    { 
-      onPrev: goPrev, 
-      onRepairClick: () => goTo(9), 
-      onBarrierClick: () => goTo(11), 
-      onInnovationsClick: () => goTo(13), 
-      onSafetyClick: () => goTo(15), 
-      onNext: goNext 
-    }, // 8: CoreSolutionsSlide
-    { onBack: () => goTo(8), onNext: goNext }, // 9: RepairRetrofitSlide
-    { solutionType: "repair" as const, onBack: () => goTo(9), onNext: goNext }, // 10: CaseStudiesSlide (repair)
-    { onBack: () => goTo(8), onNext: goNext }, // 11: BarrierCableSlide
-    { solutionType: "barrier" as const, onBack: () => goTo(11), onNext: goNext }, // 12: CaseStudiesSlide (barrier)
-    { onBack: () => goTo(8), onNext: goNext }, // 13: InnovationsSlide
-    { solutionType: "innovations" as const, onBack: () => goTo(13), onNext: goNext }, // 14: CaseStudiesSlide (innovations)
-    { onBack: () => goTo(8), onNext: goNext }, // 15: SafetySlide
-    { solutionType: "safety" as const, onBack: () => goTo(15) }, // 16: CaseStudiesSlide (safety)
-  ];
+  const slideProps = useMemo<Record<string, any>[]>(
+    () => [
+      { onNext: goNext }, // 0: WelcomeSlide
+      { onPrev: goPrev, onNext: goNext, onVideoEnd: goNext }, // 1: LegacySlide
+      {
+        onPrev: goPrev,
+        onOverviewClick: () => goTo(3),
+        onAboutUsClick: () => goTo(8),
+        onInnovationClick: () => goTo(14),
+      }, // 2: IntroductionHubSlide
+      { onPrev: () => goTo(2), onNext: goNext, onJumpToSolutions: () => goTo(9) }, // 3: WhyPostTensioning1Slide
+      { onPrev: goPrev, onNext: goNext, onJumpToSolutions: () => goTo(9) }, // 4: WhyPostTensioning2Slide
+      { onPrev: goPrev, onNext: goNext, onJumpToSolutions: () => goTo(9) }, // 5: WhyPostTensioning3Slide
+      {
+        onPrev: goPrev,
+        onNext: () => goTo(7), // Keyboard navigation goes to FailuresSlide
+        onSilentRisksClick: () => goTo(10),
+        onHiddenDamageClick: () => goTo(10),
+        onJumpToSolutions: () => goTo(10),
+        onNavigateToRepair: () => goTo(16), // Click navigation goes directly to RepairRetrofitSlide
+        onNavigateToFailures: () => goTo(7), // Click navigation goes to FailuresSlide
+      }, // 6: CriticalSlide
+      {
+        onPrev: goPrev,
+        onNext: () => goTo(10), // Go to CoreSolutionsSlide after viewing all failures
+      }, // 7: FailuresSlide
+      { onBack: goBack, onNext: () => goTo(9) }, // 8: CaseStudiesSlide (overview)
+      { onPrev: goPrev, onNext: goNext }, // 9: OurProcessSlide
+      {
+        onPrev: goPrev,
+        onRepairClick: () => goTo(16),
+        onBarrierClick: () => goTo(15),
+        onInnovationsClick: () => goTo(14),
+        onSafetyClick: () => goTo(17),
+        onNext: goNext,
+      }, // 10: CoreSolutionsSlide
+      { onPrev: goPrev, onNext: goNext }, // 11: AboutUsSlide
+              { onPrev: goPrev, onNext: goNext, onVideoEnd: goNext }, // 12: LegacySlide (duplicate)
+      { onBack: goBack, onNext: () => goTo(14) }, // 13: CaseStudiesSlide (company)
+      { onBack: goBack, onNext: goNext }, // 14: InnovationsSlide
+      { onBack: goBack, onNext: goNext }, // 15: BarrierCableSlide
+      { onBack: goBack, onNext: goNext }, // 16: RepairRetrofitSlide
+      { onBack: goBack, onNext: goNext }, // 17: SafetySlide
+      { onBack: goBack, onNext: goNext }, // 18: CaseStudiesSlide (repair)
+      { onBack: goBack, onNext: () => goTo(2) }, // 19: CaseStudiesSlide (innovations) - final slide, return to hub
+    ],
+    [goNext, goPrev, goTo, goBack]
+  );
 
-  const { Component } = slides[current];
-  const slideSpecificProps = slideProps[current];
-  const slideProps_combined = { ...slides[current].props, ...slideSpecificProps };
+  const { Component, props: baseProps = {} } = slides[current];
+  const combinedProps = useMemo(
+    () => ({ ...baseProps, ...slideProps[current] }),
+    [baseProps, slideProps, current]
+  );
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
-      <Suspense fallback={
-        <div className="w-full h-full flex items-center justify-center bg-gray-900">
-          <motion.div
-            className="text-white text-2xl"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            Loading...
-          </motion.div>
-        </div>
-      }>
-        <Component key={current} {...slideProps_combined as Record<string, unknown>} />
+    <div className="relative w-full h-[100dvh] overflow-hidden">
+      {current > 0 && (
+        <BadgeGroup currentSlide={current} lastVisitedSlide={lastVisited} onBadgeClick={goTo} />
+      )}
+      <Suspense
+        fallback={
+          <div className="w-full h-full flex items-center justify-center bg-gray-900">
+            <motion.div
+              className="text-white text-2xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              Loading...
+            </motion.div>
+          </div>
+        }
+      >
+        <Component key={current} {...combinedProps} />
       </Suspense>
     </div>
   );

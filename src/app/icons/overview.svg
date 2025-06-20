@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31.55 21.76">
+  <g id="c" data-name="Layer 1">
+    <g>
+      <path d="M1.81,1.81c-.46,0-.93.18-1.28.53-.35.35-.53.82-.53,1.28v14.51c0,.46.18.93.53,1.28.35.35.82.53,1.28.53h12.15c0,1,.81,1.81,1.81,1.81s1.81-.81,1.81-1.81h12.15c.46,0,.93-.18,1.28-.53.35-.35.53-.82.53-1.28V3.63c0-.46-.18-.93-.53-1.28s-.82-.53-1.28-.53H1.81Z" fill="#3f4a5a"/>
+      <g>
+        <path d="M13.96,0H1.81v18.13h12.15c1,0,1.81.81,1.81,1.81V1.81c0-1-.81-1.81-1.81-1.81Z" fill="#efefef"/>
+        <path d="M17.59,0h12.15v18.13h-12.15c-1,0-1.81.81-1.81,1.81V1.81c0-1,.81-1.81,1.81-1.81Z" fill="#efefef"/>
+        <path d="M13.96,0v18.13c1,0,1.81.81,1.81,1.81V1.81c0-1-.81-1.81-1.81-1.81Z" fill="#e6e5e5"/>
+      </g>
+      <g>
+        <g>
+          <rect x="3.63" y="6.93" width="8.52" height=".85" fill="#cccbca"/>
+          <rect x="3.63" y="8.64" width="8.52" height=".85" fill="#cccbca"/>
+          <rect x="3.63" y="10.35" width="8.52" height=".85" fill="#cccbca"/>
+          <rect x="3.63" y="12.05" width="8.52" height=".85" fill="#cccbca"/>
+          <rect x="3.63" y="13.76" width="8.52" height=".85" fill="#cccbca"/>
+          <rect x="3.63" y="15.47" width="8.52" height=".85" fill="#cccbca"/>
+        </g>
+        <g>
+          <rect x="19.4" y="1.81" width="8.52" height=".85" fill="#cccbca"/>
+          <rect x="19.4" y="3.52" width="8.52" height=".85" fill="#cccbca"/>
+          <rect x="19.4" y="5.23" width="8.52" height=".85" fill="#cccbca"/>
+          <rect x="19.4" y="6.93" width="8.52" height=".85" fill="#cccbca"/>
+          <rect x="19.4" y="8.64" width="8.52" height=".85" fill="#cccbca"/>
+          <rect x="19.4" y="10.35" width="8.52" height=".85" fill="#cccbca"/>
+          <rect x="19.4" y="12.05" width="8.52" height=".85" fill="#cccbca"/>
+          <rect x="19.4" y="13.76" width="8.52" height=".85" fill="#cccbca"/>
+          <rect x="19.4" y="15.47" width="8.52" height=".85" fill="#cccbca"/>
+        </g>
+        <rect x="3.63" y="1.81" width="8.52" height="4.27" fill="#f8c963"/>
+        <polygon points="17.7 0 17.7 17.17 17.7 17.17 18.55 16.32 19.4 17.17 19.4 0 17.7 0" fill="#f67656"/>
+      </g>
+    </g>
+  </g>
+</svg>

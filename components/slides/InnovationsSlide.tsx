@@ -90,9 +90,12 @@ const InnovationsSlide: React.FC<{ onBack?: () => void; onNext?: () => void }> =
       points: [
        
       ],
-      images: [],
-      has3DModel: true,
-      objUrl: "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/Barrierbock.obj"
+      images: [
+        "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/fpsmain.png",
+        "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/fps.JPG",
+        "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/fps2.JPG",
+        "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/fps3.JPG"
+      ]
     }
   ];
 
@@ -118,56 +121,62 @@ const InnovationsSlide: React.FC<{ onBack?: () => void; onNext?: () => void }> =
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight" || e.key === " ") {
-        if (scene > 0) {
-          const currentSceneData = detailScenes[scene - 1];
-          const totalItems = (currentSceneData.images?.length || 0) + 
-            (currentSceneData.hasWebsite ? 1 : 0) + 
-            (currentSceneData.has3DModel ? 1 : 0);
-          
-          if (imageIndex < totalItems - 1) {
-            setImageIndex(prev => prev + 1);
-          } else {
-            if (scene < detailScenes.length) {
-              setScene(prev => prev + 1);
-              setImageIndex(0);
-            } else if (onNext) {
-              onNext();
-            }
-          }
-        } else {
+        if (scene === 0) {
+          // From intro, go to first detail scene
           setScene(1);
           setImageIndex(0);
+        } else if (scene >= 1 && scene <= detailScenes.length) {
+          // In detail scenes - check if we can advance within current scene
+          const currentSceneData = detailScenes[scene - 1];
+          const totalItems = (currentSceneData.images?.length || 0) + 
+            (currentSceneData.hasWebsite ? 1 : 0);
+          
+          if (imageIndex < totalItems - 1) {
+            // Advance to next image/media in current scene
+            setImageIndex(prev => prev + 1);
+          } else if (scene < detailScenes.length) {
+            // Go to next scene
+            setScene(prev => prev + 1);
+            setImageIndex(0);
+          } else {
+            // Last scene, go to next slide
+            if (onNext) onNext();
+          }
         }
         e.preventDefault();
       } else if (e.key === "ArrowLeft") {
-        if (scene > 0) {
+        if (scene === 0) {
+          // From intro, go back to previous slide
+          if (onBack) onBack();
+        } else if (scene >= 1 && scene <= detailScenes.length) {
+          // In detail scenes
           if (imageIndex > 0) {
+            // Go back to previous image/media in current scene
             setImageIndex(prev => prev - 1);
           } else if (scene > 1) {
-            setScene(prev => prev - 1);
-            const prevSceneData = detailScenes[scene - 2];
+            // Go to previous scene, set to last media item
+            const prevScene = scene - 1;
+            const prevSceneData = detailScenes[prevScene - 1];
             const prevSceneTotalItems = (prevSceneData.images?.length || 0) + 
-              (prevSceneData.hasWebsite ? 1 : 0) + 
-              (prevSceneData.has3DModel ? 1 : 0);
-            setImageIndex(prevSceneTotalItems - 1);
+              (prevSceneData.hasWebsite ? 1 : 0);
+            setScene(prevScene);
+            setImageIndex(Math.max(0, prevSceneTotalItems - 1));
           } else {
+            // From first detail scene, go back to intro
             setScene(0);
             setImageIndex(0);
           }
-        } else if (onBack) {
-          onBack();
         }
         e.preventDefault();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [scene, imageIndex, onBack, onNext, detailScenes]);
+  }, [scene, imageIndex, onBack, onNext]);
 
   const renderMediaContent = (sceneData: typeof detailScenes[0], currentImageIndex: number) => {
     const imagesLength = sceneData.images?.length || 0;
     const showWebsite = sceneData.hasWebsite && currentImageIndex === imagesLength;
-    const show3DModel = sceneData.has3DModel && currentImageIndex === imagesLength + (sceneData.hasWebsite ? 1 : 0);
     
     if (showWebsite) {
       return (
@@ -181,15 +190,6 @@ const InnovationsSlide: React.FC<{ onBack?: () => void; onNext?: () => void }> =
           />
           <div className="absolute top-4 right-4 bg-black/70 px-3 py-1 rounded-full">
             <span className="text-white text-sm">fortispile.com</span>
-          </div>
-        </div>
-      );
-    } else if (show3DModel) {
-      return (
-        <div className="relative w-full h-[500px] rounded-2xl overflow-hidden shadow-2xl">
-          <ThreeObjViewer objUrl={sceneData.objUrl} />
-          <div className="absolute top-4 right-4 bg-black/70 px-3 py-1 rounded-full">
-            <span className="text-white text-sm">Interactive 3D Model</span>
           </div>
         </div>
       );
@@ -228,9 +228,12 @@ const InnovationsSlide: React.FC<{ onBack?: () => void; onNext?: () => void }> =
     <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(147, 51, 234, 0.1) 40px, rgba(147, 51, 234, 0.1) 80px)`,
-        }} />
+        <div 
+          className="absolute inset-0" 
+          style={{
+            backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(147, 51, 234, 0.1) 40px, rgba(147, 51, 234, 0.1) 80px)`
+          }} 
+        />
       </div>
 
       {/* Title - Always visible at top for scenes > 0 */}
@@ -310,76 +313,84 @@ const InnovationsSlide: React.FC<{ onBack?: () => void; onNext?: () => void }> =
         ) : (
           /* Detail Scenes with 30/70 layout */
           <div className="w-full max-w-7xl mx-auto mt-20">
-            <div className="grid grid-cols-10 gap-8 items-center">
-              {/* Text Section - 30% */}
-              <div className="col-span-3 bg-purple-900/20 p-8 rounded-2xl border border-purple-500/20">
-                <h3 className="text-2xl font-bold text-purple-400 mb-2">
-                  {detailScenes[scene - 1].title}
-                </h3>
-                <p className="text-purple-300 text-sm mb-6">
-                  {detailScenes[scene - 1].subtitle}
-                </p>
-                <ul className="space-y-4">
-                  {detailScenes[scene - 1].points.map((point, index) => (
-                    <motion.li
-                      key={index}
-                      className="text-gray-300 flex items-start text-sm"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.15 }}
-                    >
-                      <span className="w-2 h-2 rounded-full bg-purple-500 mr-3 mt-1.5 flex-shrink-0"></span>
-                      <span>{point}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Image/Media Section - 70% */}
-              <div className="col-span-7">
-                {renderMediaContent(detailScenes[scene - 1], imageIndex)}
-                
-                {/* Media indicator */}
-                {((detailScenes[scene - 1].images?.length || 0) > 1 || detailScenes[scene - 1].hasWebsite || detailScenes[scene - 1].has3DModel) && (
-                  <div className="flex justify-center mt-4 gap-2">
-                    {[...Array(detailScenes[scene - 1].images?.length || 0)].map((_, idx) => (
-                      <div
-                        key={`img-${idx}`}
-                        className={`w-2 h-2 rounded-full transition-all ${
-                          imageIndex === idx ? 'bg-purple-400 w-8' : 'bg-purple-600/40'
-                        }`}
-                      />
+            {scene >= 1 && scene <= detailScenes.length && (
+              <>
+                <div className="grid grid-cols-10 gap-8 items-center">
+                  {/* Text Section - 30% */}
+                  <div className="col-span-3 bg-purple-900/20 p-8 rounded-2xl border border-purple-500/20">
+                    <h3 className="text-2xl font-bold text-purple-400 mb-2">
+                      {detailScenes[scene - 1].title}
+                    </h3>
+                    <p className="text-purple-300 text-sm mb-6">
+                      {detailScenes[scene - 1].subtitle}
+                    </p>
+                    <ul className="space-y-4">
+                      {detailScenes[scene - 1].points.map((point, index) => (
+                      <motion.li
+                        key={index}
+                        className="text-gray-300 flex items-start text-sm"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.15 }}
+                      >
+                        <span className="w-2 h-2 rounded-full bg-purple-500 mr-3 mt-1.5 flex-shrink-0"></span>
+                        <span>{point}</span>
+                      </motion.li>
                     ))}
-                    {detailScenes[scene - 1].hasWebsite && (
-                      <div
-                        className={`w-2 h-2 rounded-full transition-all ${
-                          imageIndex === (detailScenes[scene - 1].images?.length || 0) ? 'bg-purple-400 w-8' : 'bg-purple-600/40'
-                        }`}
-                      />
-                    )}
-                    {detailScenes[scene - 1].has3DModel && (
-                      <div
-                        className={`w-2 h-2 rounded-full transition-all ${
-                          imageIndex === (detailScenes[scene - 1].images?.length || 0) + (detailScenes[scene - 1].hasWebsite ? 1 : 0) ? 'bg-purple-400 w-8' : 'bg-purple-600/40'
-                        }`}
-                      />
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
+                  </ul>
+                </div>
 
-            {/* Scene Navigation Dots */}
+                {/* Image/Media Section - 70% */}
+                <div className="col-span-7">
+                  {renderMediaContent(detailScenes[scene - 1], imageIndex)}
+                  
+                  {/* Media indicator */}
+                  {((detailScenes[scene - 1].images?.length || 0) > 1 || detailScenes[scene - 1].hasWebsite) && (
+                    <div className="flex justify-center mt-4 gap-2">
+                      {[...Array(detailScenes[scene - 1].images?.length || 0)].map((_, idx) => (
+                        <div
+                          key={`img-${idx}`}
+                          className={`w-2 h-2 rounded-full transition-all ${
+                            imageIndex === idx ? 'bg-purple-400 w-8' : 'bg-purple-600/40'
+                          }`}
+                        />
+                      ))}
+                      {detailScenes[scene - 1].hasWebsite && (
+                        <div
+                          className={`w-2 h-2 rounded-full transition-all ${
+                            imageIndex === (detailScenes[scene - 1].images?.length || 0) ? 'bg-purple-400 w-8' : 'bg-purple-600/40'
+                          }`}
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+              </>
+            )}
+
+            {/* Scene Navigation Dots - Only show current and available scenes */}
             <div className="flex justify-center mt-8 gap-2">
-              {[0, 1, 2, 3, 4].map((index) => (
+              {/* Intro dot */}
+              <button
+                onClick={() => {
+                  setScene(0);
+                  setImageIndex(0);
+                }}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  scene === 0 ? 'bg-purple-400 w-8' : 'bg-purple-600/40'
+                }`}
+              />
+              {/* Detail scene dots - only show valid scenes */}
+              {detailScenes.map((_, index) => (
                 <button
-                  key={index}
+                  key={index + 1}
                   onClick={() => {
-                    setScene(index);
+                    setScene(index + 1);
                     setImageIndex(0);
                   }}
                   className={`w-2 h-2 rounded-full transition-all ${
-                    scene === index ? 'bg-purple-400 w-8' : 'bg-purple-600/40'
+                    scene === index + 1 ? 'bg-purple-400 w-8' : 'bg-purple-600/40'
                   }`}
                 />
               ))}

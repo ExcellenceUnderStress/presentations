@@ -1,9 +1,25 @@
-import React, { useEffect, useState, memo } from "react";
+import React, { useEffect, useState, memo, useCallback, useRef } from "react";
 import { VictoryArea, VictoryChart, VictoryAxis, VictoryContainer, VictoryTheme, VictoryScatter } from "victory";
 import { motion, AnimatePresence } from "framer-motion";
 
 const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => void }> = memo(({ onPrev, onNext }) => {
   const [visibleItems, setVisibleItems] = useState(0);
+  const timersRef = useRef<NodeJS.Timeout[]>([]);
+  const mountedRef = useRef(true);
+
+  // Cleanup function
+  const cleanup = useCallback(() => {
+    timersRef.current.forEach(timer => clearTimeout(timer));
+    timersRef.current = [];
+  }, []);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      cleanup();
+    };
+  }, [cleanup]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -15,17 +31,22 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
   }, [onPrev, onNext]);
 
   useEffect(() => {
+    cleanup(); // Clear any existing timers
+    
     const timer = setInterval(() => {
+      if (!mountedRef.current) return;
       setVisibleItems(prev => {
         if (prev < 4) {
           return prev + 1;
         }
+        clearInterval(timer);
         return prev;
       });
-    }, 700);
+    }, 600); // Balanced animation speed
 
-    return () => clearInterval(timer);
-  }, []);
+    timersRef.current.push(timer);
+    return cleanup;
+  }, [cleanup]);
 
   // Design Flexibility & Site Compatibility with flexibility scores
   const designFlexibility = [
@@ -33,37 +54,45 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
       feature: "Curved Geometries", 
       flexibility: 95,
       impact: 85,
+      description: "Enables complex architectural forms",
+      benefit: "Unlimited design creativity & aesthetic freedom",
       color: "#3B82F6",
       bgColor: "bg-blue-500/10",
       borderColor: "border-blue-400/30",
-      description: "Complex architectural forms"
+      icon: "🎨"
     },
     { 
       feature: "Floor-to-Floor Height", 
       flexibility: 80,
       impact: 70,
+      description: "Allows for more usable ceiling space",
+      benefit: "Optimized space utilization & building efficiency",
       color: "#8B5CF6",
       bgColor: "bg-purple-500/10",
       borderColor: "border-purple-400/30",
-      description: "Optimized space utilization"
+      icon: "📐"
     },
     { 
       feature: "Soft/Expansive Soils", 
       flexibility: 90,
       impact: 95,
+      description: "Works well on challenging ground conditions",
+      benefit: "Suitable for difficult sites & reduced foundation requirements",
       color: "#10B981",
       bgColor: "bg-green-500/10",
       borderColor: "border-green-400/30",
-      description: "Challenging ground conditions"
+      icon: "🌍"
     },
     { 
       feature: "Foundation Loads", 
       flexibility: 75,
       impact: 80,
+      description: "Reduces structural demands on foundations",
+      benefit: "Lower foundation costs & simplified construction",
       color: "#F59E0B",
       bgColor: "bg-amber-500/10",
       borderColor: "border-amber-400/30",
-      description: "Reduced structural demands"
+      icon: "⚡"
     }
   ];
 
@@ -79,8 +108,9 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
   const scatterData = designFlexibility.map((item, index) => ({
     x: item.flexibility,
     y: item.impact,
-    size: index < visibleItems ? 8 : 0,
-    fill: item.color
+    size: index < visibleItems ? 10 : 0,
+    fill: item.color,
+    label: item.feature.split(' ')[0]
   }));
 
   return (
@@ -108,10 +138,13 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
             <p className="text-2xl text-gray-300 font-light">
               Design Flexibility & Site Compatibility
             </p>
+            <p className="text-lg text-gray-400 mt-4 max-w-3xl mx-auto">
+              Post-tensioning adapts to any design vision and site condition
+            </p>
           </motion.div>
 
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Victory Charts */}
+            {/* Enhanced Charts Section */}
             <div className="space-y-8">
               {/* Area Chart - Flexibility Growth */}
               <motion.div 
@@ -120,14 +153,14 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1, delay: 0.3 }}
               >
-                <h3 className="text-lg font-bold text-white mb-4 text-center">Design Flexibility Growth</h3>
+                <h3 className="text-lg font-bold text-white mb-2 text-center">Design Freedom Growth</h3>
+                <p className="text-xs text-gray-400 mb-4 text-center">Capability expansion over project complexity</p>
                 <VictoryChart
                   theme={VictoryTheme.material}
                   width={400}
                   height={200}
                   containerComponent={<VictoryContainer responsive={false} />}
                   padding={{ left: 50, top: 20, right: 50, bottom: 40 }}
-                  animate={false}
                 >
                   <VictoryAxis
                     dependentAxis
@@ -139,9 +172,10 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
                     }}
                   />
                   <VictoryAxis
+                    tickFormat={(x) => `Level ${x}`}
                     style={{
                       axis: { stroke: "#6B7280" },
-                      tickLabels: { fill: "#D1D5DB", fontSize: 10 },
+                      tickLabels: { fill: "#D1D5DB", fontSize: 9 },
                     }}
                   />
                   <VictoryArea
@@ -155,6 +189,10 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
                         stroke: "#10B981",
                         strokeWidth: 3
                       }
+                    }}
+                    animate={{
+                      duration: 1000,
+                      onLoad: { duration: 500 }
                     }}
                   />
                   <defs>
@@ -173,7 +211,8 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1, delay: 0.5 }}
               >
-                <h3 className="text-lg font-bold text-white mb-4 text-center">Flexibility vs Impact</h3>
+                <h3 className="text-lg font-bold text-white mb-2 text-center">Flexibility vs Impact Matrix</h3>
+                <p className="text-xs text-gray-400 mb-4 text-center">Design capability assessment</p>
                 <VictoryChart
                   theme={VictoryTheme.material}
                   width={400}
@@ -181,7 +220,6 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
                   containerComponent={<VictoryContainer responsive={false} />}
                   padding={{ left: 50, top: 20, right: 50, bottom: 40 }}
                   domain={{ x: [60, 100], y: [60, 100] }}
-                  animate={false}
                 >
                   <VictoryAxis
                     dependentAxis
@@ -189,7 +227,7 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
                     style={{
                       axis: { stroke: "#6B7280" },
                       tickLabels: { fill: "#D1D5DB", fontSize: 10 },
-                      axisLabel: { fill: "#D1D5DB", fontSize: 12 },
+                      axisLabel: { fill: "#D1D5DB", fontSize: 11 },
                       grid: { stroke: "#374151", strokeDasharray: "2,2" }
                     }}
                   />
@@ -198,7 +236,7 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
                     style={{
                       axis: { stroke: "#6B7280" },
                       tickLabels: { fill: "#D1D5DB", fontSize: 10 },
-                      axisLabel: { fill: "#D1D5DB", fontSize: 12 }
+                      axisLabel: { fill: "#D1D5DB", fontSize: 11 }
                     }}
                   />
                   <VictoryScatter
@@ -213,12 +251,16 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
                         strokeWidth: 2
                       }
                     }}
+                    animate={{
+                      duration: 800,
+                      onLoad: { duration: 400 }
+                    }}
                   />
                 </VictoryChart>
               </motion.div>
             </div>
 
-            {/* Feature Cards */}
+            {/* Enhanced Feature Cards */}
             <div className="space-y-4">
               <AnimatePresence>
                 {designFlexibility.map((item, index) => (
@@ -231,82 +273,93 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
                     }}
                     transition={{ 
                       duration: 0.6,
-                      delay: index * 0.25
+                      delay: index * 0.2 // Reduced delay
                     }}
-                    className={`${item.bgColor} ${item.borderColor} border-2 rounded-xl p-6 backdrop-blur-sm`}
+                    className={`${item.bgColor} ${item.borderColor} border-2 rounded-xl p-6 backdrop-blur-sm hover:scale-105 transition-transform duration-300`}
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center space-x-3 mb-3">
                           <div 
-                            className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold text-white"
+                            className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold text-white shadow-lg"
                             style={{ backgroundColor: item.color }}
                           >
-                            {index + 1}
+                            {item.icon}
                           </div>
                           <div>
                             <div className="text-lg font-semibold text-white">
                               {item.feature}
                             </div>
-                            <div className="text-sm text-gray-300">
+                            <div className="text-sm text-blue-300 font-medium">
                               {item.description}
                             </div>
                           </div>
                         </div>
                         
-                        {/* Dual Progress Bars */}
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-xs text-gray-400">
-                            <span>Flexibility</span>
-                            <span>{item.flexibility}%</span>
+                        <div className="mb-4">
+                          <div className="text-xs text-gray-400 mb-2">
+                            {item.benefit}
                           </div>
-                          <div className="bg-gray-700/50 rounded-full h-1.5 overflow-hidden">
+                        </div>
+                        
+                        {/* Enhanced Progress Bars */}
+                        <div className="space-y-3">
+                          <div className="flex justify-between text-xs text-gray-400">
+                            <span>Design Flexibility</span>
+                            <span className="font-bold text-white">{item.flexibility}%</span>
+                          </div>
+                          <div className="bg-gray-700/50 rounded-full h-2 overflow-hidden shadow-inner">
                             <motion.div
-                              className="h-full rounded-full"
+                              className="h-full rounded-full relative"
                               style={{ backgroundColor: item.color }}
                               initial={{ width: 0 }}
                               animate={{ 
                                 width: index < visibleItems ? `${item.flexibility}%` : 0 
                               }}
                               transition={{ 
-                                duration: 1.2,
-                                delay: index * 0.25 + 0.5,
+                                duration: 1.0,
+                                delay: index * 0.2 + 0.3,
                                 ease: "easeOut"
                               }}
-                            />
+                            >
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full"></div>
+                            </motion.div>
                           </div>
                           
                           <div className="flex justify-between text-xs text-gray-400">
-                            <span>Impact</span>
-                            <span>{item.impact}%</span>
+                            <span>Project Impact</span>
+                            <span className="font-bold text-white">{item.impact}%</span>
                           </div>
-                          <div className="bg-gray-700/50 rounded-full h-1.5 overflow-hidden">
+                          <div className="bg-gray-700/50 rounded-full h-2 overflow-hidden shadow-inner">
                             <motion.div
-                              className="h-full rounded-full opacity-70"
+                              className="h-full rounded-full relative opacity-75"
                               style={{ backgroundColor: item.color }}
                               initial={{ width: 0 }}
                               animate={{ 
                                 width: index < visibleItems ? `${item.impact}%` : 0 
                               }}
                               transition={{ 
-                                duration: 1.2,
-                                delay: index * 0.25 + 0.7,
+                                duration: 1.0,
+                                delay: index * 0.2 + 0.5,
                                 ease: "easeOut"
                               }}
-                            />
+                            >
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full"></div>
+                            </motion.div>
                           </div>
                         </div>
                       </div>
                       
                       <div className="ml-4">
                         <div 
-                          className="w-16 h-16 rounded-lg flex items-center justify-center"
+                          className="w-16 h-16 rounded-lg flex flex-col items-center justify-center text-center p-2"
                           style={{ backgroundColor: `${item.color}15` }}
                         >
                           <div 
-                            className="w-10 h-10 rounded-full"
+                            className="w-8 h-8 rounded-full mb-1"
                             style={{ backgroundColor: item.color }}
                           ></div>
+                          <div className="text-xs text-gray-400">#{index + 1}</div>
                         </div>
                       </div>
                     </div>

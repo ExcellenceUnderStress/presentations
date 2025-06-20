@@ -9,17 +9,17 @@ const RepairRetrofitSlide: React.FC<{ onBack?: () => void; onNext?: () => void }
     {
       title: "Strand Repairs",
       description: "Greased mono strand & epoxy fixes",
-      icon: "🛠️"
+      icon: "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/repair.svg"
     },
     {
       title: "Full Replacements",
       description: "Complete tendon replacement solutions",
-      icon: "🔧"
+      icon: "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/replacement.svg"
     },
     {
       title: "De-tensioning",
       description: "Safe and controlled de-tensioning",
-      icon: "⚙️"
+      icon: "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/detensioning.svg"
     }
   ];
 
@@ -28,13 +28,11 @@ const RepairRetrofitSlide: React.FC<{ onBack?: () => void; onNext?: () => void }
       title: "Live Scanning & Strike Prevention",
       points: [
         "GPR scanning to locate tendons before coring",
-        "Prevents costly accidents and disruptions",
+        "Allows for precise tendon location and repair",
         "Protects liability for GCs and owners",
-        "In-house scanning with trained technicians"
       ],
       images: [
-        "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/Prior+to+Repairs+starting.jpg",
-        "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/Epoxy+Live+Strand+Re-Anchoring.JPG"
+        "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/scanning.png"
       ]
     },
     {
@@ -46,8 +44,7 @@ const RepairRetrofitSlide: React.FC<{ onBack?: () => void; onNext?: () => void }
         "Buttonhead repairs and re-anchoring"
       ],
       images: [
-        "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/Prior+to+Repairs+starting.jpg",
-        "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/Epoxy+Live+Strand+Re-Anchoring.JPG"
+        "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/CompleteStrandReplacements.png"
       ]
     },
     {
@@ -55,9 +52,8 @@ const RepairRetrofitSlide: React.FC<{ onBack?: () => void; onNext?: () => void }
       subtitle: "Comprehensive solutions for severe damage",
       points: [
         "End-to-end replacement of damaged tendons",
-        "Minimally invasive techniques",
-        "Code-compliant installations",
-        "Full documentation and testing"
+        "Correct sizing and strand replacement",
+        "PTI Certified Crew"
       ],
       images: [],
       hasVideo: true,
@@ -72,7 +68,10 @@ const RepairRetrofitSlide: React.FC<{ onBack?: () => void; onNext?: () => void }
         "Re-anchoring with precision"
       ],
       images: [
-        "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1600&h=900&fit=crop"
+        "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/controlleddetensionbefore.jpg",
+        "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/1++Re-locate+3+groups+of+Banded+Tendons.+Need+to+relocate+Grease+Trap+Hole..JPG",
+        "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/2++Hole+Re-locate.JPG",
+        "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/5+New+Encapsulated+Anchors+in+place.JPG",
       ]
     }
   ];
