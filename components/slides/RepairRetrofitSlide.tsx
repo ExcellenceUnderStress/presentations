@@ -136,10 +136,14 @@ const RepairRetrofitSlide: React.FC<{
           <video
             src={sceneData.videoUrl}
             autoPlay
-            muted
             loop
             playsInline
+            controls
             className="w-full h-full object-contain"
+            onLoadedMetadata={(e) => {
+              const video = e.target as HTMLVideoElement;
+              video.volume = 0.3; // Set volume to 30%
+            }}
           />
           <div className="absolute top-4 right-4 bg-black/70 px-3 py-1 rounded-full">
             <span className="text-white text-sm">Video Demo</span>
