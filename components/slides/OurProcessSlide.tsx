@@ -1,39 +1,39 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const OurProcessSlide: React.FC<{ onPrev?: () => void; onNext?: () => void }> = ({ onPrev, onNext }) => {
+const OurProcessSlide: React.FC<{ onPrev?: () => void; onNext?: () => void; onCaseStudiesClick?: () => void }> = ({ onPrev, onNext, onCaseStudiesClick }) => {
   const [activeStep, setActiveStep] = useState(0);
 
   const timelineSteps = [
     {
-      title: "Early Involvement",
-      subtitle: "Avoids Costly Changes",
-      icon: "🚀",
-      desc: "We partner with owners, designers, and contractors from day one to maximize value and minimize risk.",
+      title: "Safety & Well-Being",
+      subtitle: "People First",
+      icon: "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/safety.svg",
+      desc: "Every decision prioritizes the safety and well-being of our team, clients, and communities we serve.",
       color: "from-emerald-500 to-teal-600",
       position: "left"
     },
     {
-      title: "Design for Constructability",
-      subtitle: "Smart Engineering",
-      icon: "🏗️",
-      desc: "Practical consulting and design input ensure your project is buildable, efficient, and cost-effective.",
+      title: "Certified Mastery",
+      subtitle: "Expert Excellence",
+      icon: "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/award.svg",
+      desc: "Our certified professionals bring deep expertise and proven mastery to every project challenge.",
       color: "from-blue-500 to-cyan-600",
       position: "right"
     },
     {
-      title: "Direct Problem-Solving",
-      subtitle: "Honest Communication",
-      icon: "🎯",
-      desc: "Transparent, straightforward approach to challenges with solutions that work in the real world.",
+      title: "Integrity & Collaboration",
+      subtitle: "Honest Partnership",
+      icon: "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/perfect.svg",
+      desc: "We build lasting relationships through transparent communication and collaborative problem-solving.",
       color: "from-purple-500 to-indigo-600",
       position: "left"
     },
     {
-      title: "Field-Proven Advice",
-      subtitle: "Years of Experience",
-      icon: "👷",
-      desc: "Our solutions are grounded in real-world experience, prioritizing safety, speed, and quality in the field.",
+      title: "Innovation & Progress",
+      subtitle: "Forward Thinking",
+      icon: "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/rocket.svg",
+      desc: "We embrace new technologies and methods to deliver better outcomes and drive industry progress.",
       color: "from-orange-500 to-red-600",
       position: "right"
     }
@@ -91,17 +91,17 @@ const OurProcessSlide: React.FC<{ onPrev?: () => void; onNext?: () => void }> = 
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 md:px-8">
         {/* Header */}
         <motion.div 
-          className="text-center mb-12"
+          className="text-center mb-8"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
         >
           <h2 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight">
-            How We Approach
+            How We Work
           </h2>
-          <h3 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            Every Project
-          </h3>
+          <p className="text-lg md:text-xl text-white/80 max-w-4xl mx-auto leading-relaxed">
+            By strengthening buildings, we strengthen communities. Our work extends the lifespan of critical infrastructure, reduces long-term maintenance costs, and contributes to safer public spaces.
+          </p>
         </motion.div>
 
         {/* Timeline Container */}
@@ -188,14 +188,18 @@ const OurProcessSlide: React.FC<{ onPrev?: () => void; onNext?: () => void }> = 
                     transition={{ type: "spring", stiffness: 300 }}
                   >
                     <motion.div
-                      className="text-4xl mb-3"
+                      className="w-12 h-12 mb-3 flex items-center justify-center"
                       animate={{ 
                         rotate: activeStep === index ? [0, 10, -10, 0] : 0,
                         scale: activeStep === index ? [1, 1.1, 1] : 1
                       }}
                       transition={{ duration: 2, repeat: activeStep === index ? Infinity : 0 }}
                     >
-                      {step.icon}
+                      <img 
+                        src={step.icon} 
+                        alt={step.title}
+                        className="w-10 h-10 filter brightness-0 invert"
+                      />
                     </motion.div>
                     <h4 className="text-xl font-bold text-white mb-1">
                       {step.title}
@@ -235,21 +239,31 @@ const OurProcessSlide: React.FC<{ onPrev?: () => void; onNext?: () => void }> = 
         </motion.div>
       </div>
 
-      {/* Navigation hint */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 flex flex-col items-center">
-        <motion.div 
-          className="w-8 h-8 flex items-center justify-center animate-bounce cursor-pointer"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 3, duration: 0.5 }}
-          onClick={onNext}
-        >
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-down">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <polyline points="19 12 12 19 5 12"></polyline>
-          </svg>
-        </motion.div>
-        <span className="text-xs text-white/70 mt-2">Continue</span>
+      {/* Navigation buttons */}
+      <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-4 z-30">
+        {onPrev && (
+          <motion.button
+            onClick={onPrev}
+            className="px-6 py-3 bg-slate-700/50 text-slate-300 rounded-lg hover:bg-slate-700/70 transition-all font-semibold border border-slate-600 hover:border-slate-500"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 3, duration: 0.5 }}
+          >
+            ← Back
+          </motion.button>
+        )}
+        
+        {onNext && (
+          <motion.button
+            onClick={onNext}
+            className="px-6 py-3 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600/30 transition-all font-semibold border border-blue-500/30 hover:border-blue-400/50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 3.1, duration: 0.5 }}
+          >
+            View Case Studies →
+          </motion.button>
+        )}
       </div>
     </motion.div>
   );

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, memo, useCallback, useRef } from "react";
-import { VictoryArea, VictoryChart, VictoryAxis, VictoryContainer, VictoryTheme, VictoryScatter } from "victory";
 import { motion, AnimatePresence } from "framer-motion";
 
 const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => void }> = memo(({ onPrev, onNext }) => {
@@ -55,7 +54,6 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
       flexibility: 95,
       impact: 85,
       description: "Enables complex architectural forms",
-      benefit: "Unlimited design creativity & aesthetic freedom",
       color: "#3B82F6",
       bgColor: "bg-blue-500/10",
       borderColor: "border-blue-400/30",
@@ -66,7 +64,6 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
       flexibility: 80,
       impact: 70,
       description: "Allows for more usable ceiling space",
-      benefit: "Optimized space utilization & building efficiency",
       color: "#8B5CF6",
       bgColor: "bg-purple-500/10",
       borderColor: "border-purple-400/30",
@@ -77,7 +74,6 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
       flexibility: 90,
       impact: 95,
       description: "Works well on challenging ground conditions",
-      benefit: "Suitable for difficult sites & reduced foundation requirements",
       color: "#10B981",
       bgColor: "bg-green-500/10",
       borderColor: "border-green-400/30",
@@ -88,7 +84,6 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
       flexibility: 75,
       impact: 80,
       description: "Reduces structural demands on foundations",
-      benefit: "Lower foundation costs & simplified construction",
       color: "#F59E0B",
       bgColor: "bg-amber-500/10",
       borderColor: "border-amber-400/30",
@@ -96,22 +91,7 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
     }
   ];
 
-  // Create area chart data showing flexibility over time/complexity
-  const areaData = [
-    { x: 1, y: 20 },
-    { x: 2, y: visibleItems >= 1 ? 45 : 20 },
-    { x: 3, y: visibleItems >= 2 ? 65 : 20 },
-    { x: 4, y: visibleItems >= 3 ? 80 : 20 },
-    { x: 5, y: visibleItems >= 4 ? 95 : 20 }
-  ];
 
-  const scatterData = designFlexibility.map((item, index) => ({
-    x: item.flexibility,
-    y: item.impact,
-    size: index < visibleItems ? 10 : 0,
-    fill: item.color,
-    label: item.feature.split(' ')[0]
-  }));
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900">
@@ -143,124 +123,8 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
             </p>
           </motion.div>
 
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Enhanced Charts Section */}
-            <div className="space-y-8">
-              {/* Area Chart - Flexibility Growth */}
-              <motion.div 
-                className="bg-gray-800/30 rounded-2xl p-6 backdrop-blur-sm border border-gray-700/50"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1, delay: 0.3 }}
-              >
-                <h3 className="text-lg font-bold text-white mb-2 text-center">Design Freedom Growth</h3>
-                <p className="text-xs text-gray-400 mb-4 text-center">Capability expansion over project complexity</p>
-                <VictoryChart
-                  theme={VictoryTheme.material}
-                  width={400}
-                  height={200}
-                  containerComponent={<VictoryContainer responsive={false} />}
-                  padding={{ left: 50, top: 20, right: 50, bottom: 40 }}
-                >
-                  <VictoryAxis
-                    dependentAxis
-                    tickFormat={(x) => `${x}%`}
-                    style={{
-                      axis: { stroke: "#6B7280" },
-                      tickLabels: { fill: "#D1D5DB", fontSize: 10 },
-                      grid: { stroke: "#374151", strokeDasharray: "2,2" }
-                    }}
-                  />
-                  <VictoryAxis
-                    tickFormat={(x) => `Level ${x}`}
-                    style={{
-                      axis: { stroke: "#6B7280" },
-                      tickLabels: { fill: "#D1D5DB", fontSize: 9 },
-                    }}
-                  />
-                  <VictoryArea
-                    data={areaData}
-                    x="x"
-                    y="y"
-                    style={{
-                      data: { 
-                        fill: "url(#gradient)",
-                        fillOpacity: 0.6,
-                        stroke: "#10B981",
-                        strokeWidth: 3
-                      }
-                    }}
-                    animate={{
-                      duration: 1000,
-                      onLoad: { duration: 500 }
-                    }}
-                  />
-                  <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#10B981" stopOpacity={0.8} />
-                      <stop offset="100%" stopColor="#10B981" stopOpacity={0.1} />
-                    </linearGradient>
-                  </defs>
-                </VictoryChart>
-              </motion.div>
-
-              {/* Scatter Plot - Flexibility vs Impact */}
-              <motion.div 
-                className="bg-gray-800/30 rounded-2xl p-6 backdrop-blur-sm border border-gray-700/50"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1, delay: 0.5 }}
-              >
-                <h3 className="text-lg font-bold text-white mb-2 text-center">Flexibility vs Impact Matrix</h3>
-                <p className="text-xs text-gray-400 mb-4 text-center">Design capability assessment</p>
-                <VictoryChart
-                  theme={VictoryTheme.material}
-                  width={400}
-                  height={200}
-                  containerComponent={<VictoryContainer responsive={false} />}
-                  padding={{ left: 50, top: 20, right: 50, bottom: 40 }}
-                  domain={{ x: [60, 100], y: [60, 100] }}
-                >
-                  <VictoryAxis
-                    dependentAxis
-                    label="Impact Score"
-                    style={{
-                      axis: { stroke: "#6B7280" },
-                      tickLabels: { fill: "#D1D5DB", fontSize: 10 },
-                      axisLabel: { fill: "#D1D5DB", fontSize: 11 },
-                      grid: { stroke: "#374151", strokeDasharray: "2,2" }
-                    }}
-                  />
-                  <VictoryAxis
-                    label="Flexibility Score"
-                    style={{
-                      axis: { stroke: "#6B7280" },
-                      tickLabels: { fill: "#D1D5DB", fontSize: 10 },
-                      axisLabel: { fill: "#D1D5DB", fontSize: 11 }
-                    }}
-                  />
-                  <VictoryScatter
-                    data={scatterData}
-                    x="x"
-                    y="y"
-                    size={({ datum }) => datum.size}
-                    style={{
-                      data: { 
-                        fill: ({ datum }) => datum.fill,
-                        stroke: "#ffffff",
-                        strokeWidth: 2
-                      }
-                    }}
-                    animate={{
-                      duration: 800,
-                      onLoad: { duration: 400 }
-                    }}
-                  />
-                </VictoryChart>
-              </motion.div>
-            </div>
-
-            {/* Enhanced Feature Cards */}
+          {/* Enhanced Feature Cards - Centered Layout */}
+          <div className="max-w-4xl mx-auto">
             <div className="space-y-4">
               <AnimatePresence>
                 {designFlexibility.map((item, index) => (
@@ -296,11 +160,7 @@ const WhyPostTensioning3Slide: React.FC<{ onPrev?: () => void; onNext?: () => vo
                           </div>
                         </div>
                         
-                        <div className="mb-4">
-                          <div className="text-xs text-gray-400 mb-2">
-                            {item.benefit}
-                          </div>
-                        </div>
+
                         
                         {/* Enhanced Progress Bars */}
                         <div className="space-y-3">

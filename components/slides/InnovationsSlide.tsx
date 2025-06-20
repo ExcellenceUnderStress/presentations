@@ -8,7 +8,14 @@ const ThreeObjViewer = dynamic(() => import('../ThreeObjViewer'), {
   loading: () => <div className="w-full h-full flex items-center justify-center text-purple-400">Loading 3D model...</div>
 });
 
-const InnovationsSlide: React.FC<{ onBack?: () => void; onNext?: () => void }> = ({ onBack, onNext }) => {
+const InnovationsSlide: React.FC<{ 
+  onBack?: () => void; 
+  onNext?: () => void;
+  onRestartClick?: () => void;
+  onFailuresClick?: () => void;
+  onCaseStudiesClick?: () => void;
+  onFinishClick?: () => void;
+}> = ({ onBack, onNext, onRestartClick, onFailuresClick, onCaseStudiesClick, onFinishClick }) => {
   const [scene, setScene] = useState(0); // 0: intro grid, 1-4: detail scenes for each innovation
   const [imageIndex, setImageIndex] = useState(0); // Track which image to show in current scene
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -395,9 +402,109 @@ const InnovationsSlide: React.FC<{ onBack?: () => void; onNext?: () => void }> =
                 />
               ))}
             </div>
+
+            {/* Navigation Options */}
+            {(onRestartClick || onFailuresClick || onCaseStudiesClick || onFinishClick) && (
+              <motion.div
+                className="flex justify-center gap-4 mt-8 flex-wrap"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+              >
+                {onRestartClick && (
+                  <button
+                    onClick={onRestartClick}
+                    className="px-6 py-3 bg-purple-600/20 text-purple-400 rounded-lg hover:bg-purple-600/30 transition-all font-semibold border border-purple-500/30 hover:border-purple-400/50"
+                  >
+                    ↻ Restart
+                  </button>
+                )}
+                {onFailuresClick && (
+                  <button
+                    onClick={onFailuresClick}
+                    className="px-6 py-3 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600/30 transition-all font-semibold border border-red-500/30 hover:border-red-400/50"
+                  >
+                    View Failures →
+                  </button>
+                )}
+                {onCaseStudiesClick && (
+                  <button
+                    onClick={onCaseStudiesClick}
+                    className="px-6 py-3 bg-teal-600/20 text-teal-400 rounded-lg hover:bg-teal-600/30 transition-all font-semibold border border-teal-500/30 hover:border-teal-400/50"
+                  >
+                    Case Studies →
+                  </button>
+                )}
+                {onFinishClick && (
+                  <button
+                    onClick={onFinishClick}
+                    className="px-6 py-3 bg-green-600/20 text-green-400 rounded-lg hover:bg-green-600/30 transition-all font-semibold border border-green-500/30 hover:border-green-400/50"
+                  >
+                    Finish Presentation
+                  </button>
+                )}
+              </motion.div>
+            )}
           </div>
         )}
       </div>
+
+      {/* Navigation buttons - always visible at bottom */}
+      {(onBack || onNext) && scene === 0 && (
+        <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-4 z-30">
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="px-6 py-3 bg-slate-700/50 text-slate-300 rounded-lg hover:bg-slate-700/70 transition-all font-semibold border border-slate-600 hover:border-slate-500"
+            >
+              ← Back
+            </button>
+          )}
+          {onNext && (
+            <button
+              onClick={onNext}
+              className="px-6 py-3 bg-purple-600/20 text-purple-400 rounded-lg hover:bg-purple-600/30 transition-all font-semibold border border-purple-500/30 hover:border-purple-400/50"
+            >
+              Continue to Safety →
+            </button>
+          )}
+        </div>
+      )}
+      
+      {/* Navigation for detail scenes */}
+      {(onBack || onNext) && scene > 0 && (
+        <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-4 z-30">
+          <button
+            onClick={() => {
+              if (imageIndex > 0) {
+                setImageIndex(prev => prev - 1);
+              } else if (scene > 1) {
+                const prevScene = scene - 1;
+                const prevSceneData = detailScenes[prevScene - 1];
+                const prevSceneTotalItems = (prevSceneData.images?.length || 0) + 
+                  (prevSceneData.hasWebsite ? 1 : 0);
+                setScene(prevScene);
+                setImageIndex(Math.max(0, prevSceneTotalItems - 1));
+              } else {
+                setScene(0);
+                setImageIndex(0);
+              }
+            }}
+            className="px-6 py-3 bg-slate-700/50 text-slate-300 rounded-lg hover:bg-slate-700/70 transition-all font-semibold border border-slate-600 hover:border-slate-500"
+          >
+            ← Back
+          </button>
+          
+          {onNext && scene === detailScenes.length && imageIndex === ((detailScenes[scene - 1].images?.length || 0) + (detailScenes[scene - 1].hasWebsite ? 1 : 0) - 1) && (
+            <button
+              onClick={onNext}
+              className="px-6 py-3 bg-purple-600/20 text-purple-400 rounded-lg hover:bg-purple-600/30 transition-all font-semibold border border-purple-500/30 hover:border-purple-400/50"
+            >
+              Continue to Safety →
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

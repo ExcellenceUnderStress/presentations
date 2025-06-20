@@ -19,147 +19,331 @@ interface CaseStudy {
 }
 
 interface CaseStudiesSlideProp {
-  solutionType: "repair" | "barrier" | "innovations" | "safety";
+  solutionType: "main" | "overview" | "company" | "repair" | "barrier" | "innovations" | "safety";
   onBack?: () => void;
   onNext?: () => void;
+  onSolutionsClick?: () => void;
+  onFinishClick?: () => void;
+  onRestartClick?: () => void;
 }
 
-const CaseStudiesSlide: React.FC<CaseStudiesSlideProp> = ({ solutionType, onBack, onNext }) => {
+const CaseStudiesSlide: React.FC<CaseStudiesSlideProp> = ({ solutionType, onBack, onNext, onSolutionsClick, onFinishClick, onRestartClick }) => {
   const [currentStudy, setCurrentStudy] = useState(0);
   const [imageIndex, setImageIndex] = useState(0);
 
   const caseStudies: Record<string, CaseStudy[]> = {
+    main: [
+      {
+        id: "main-1",
+        title: "Microsoft Building 122 Retrofit",
+        client: "Microsoft Corporation",
+        location: "Redmond, WA",
+        challenge: "Removing post-tensioned slabs to create HVAC penetrations, skylights, and expansive atrium openings, involving over 1,200 tendons in an occupied building",
+        solution: "Specialized de-tensioning and re-anchoring process with complete resealing of post-tensioning anchors, achieving modifications without shoring the entire building",
+        results: [
+          "Improved interior lighting and workspace quality",
+          "Maintained structural integrity throughout retrofit",
+          "Minimal disruption to building operations",
+          "Featured on front of PTI magazine",
+          "2019 NAIOP WA State Redevelopment/Renovation of the Year winner",
+          "2019 DBIA National Award of Merit recipient"
+        ],
+        images: [
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1223.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1221.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1222.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/m122duriing.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/MS+new+opening.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/m122after.jpg"
+        ],
+        stats: [
+          { label: "Tendons Involved", value: "1,200+", unit: "tendons" },
+          { label: "Awards Won", value: "3", unit: "major awards" },
+          { label: "Building Occupancy", value: "100", unit: "% maintained" },
+          { label: "PTI Magazine", value: "Front", unit: "cover feature" }
+        ],
+        tags: ["Microsoft", "Large-Scale Retrofit", "Award Winner", "PTI Featured", "Live Building"]
+      },
+      {
+        id: "main-2",
+        title: "Kirkland Urban PT Building Retrofit",
+        client: "Urban Development Project",
+        location: "Kirkland, WA",
+        challenge: "Creating five stories of 20′ radius openings in existing PT deck, including 8′ x 8′ skylight for feature stair, plus elevator and stair modifications",
+        solution: "Patented system for precise tendon de-tensioning and relocation without full-scale shoring, enabling complex modifications while maintaining structural integrity",
+        results: [
+          "Successfully created multiple large openings without structural compromise",
+          "Eliminated need for extensive shoring systems",
+          "Significant time and cost savings over traditional methods",
+          "Enabled architectural vision with complex geometric requirements"
+        ],
+        images: [
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/kirkurbmain.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/kirkurbmain2.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/openingstairvertbefore.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/openingstairverthole.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/openingstairvertafter.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/Kirkland Spiral Stair 1 Looking Down.JPG"
+        ],
+        stats: [
+          { label: "Stories Modified", value: "5", unit: "floors" },
+          { label: "Opening Diameter", value: "20", unit: "ft" },
+          { label: "Skylight Size", value: "8×8", unit: "ft" },
+          { label: "Completion Date", value: "09/2020", unit: "" }
+        ],
+        tags: ["PT Retrofit", "Patented System", "Urban Development", "De-tensioning"]
+      },
+      {
+        id: "main-3",
+        title: "Emerald Queen Casino Parking Garage",
+        client: "Emerald Queen Casino",
+        location: "Tacoma, WA",
+        challenge: "Shoring system needed in a tight, congested environment without the need for tiebacks or additional easement rights",
+        solution: "Implemented our patented Fortis Pile Shoring system, streamlining construction without requiring tiebacks or easement rights",
+        results: [
+          "Eliminated need for tiebacks in congested site",
+          "No additional easement rights required",
+          "Streamlined construction process",
+          "Successfully managed tight space constraints",
+          "Custom fabrication met specific project needs"
+        ],
+        images: [
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/fortispilemain.png",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/fortispilemain2.png",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/fortispilemain3.png",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/fortispilemain4.png"
+        ],
+        stats: [
+          { label: "Project Year", value: "2016", unit: "" },
+          { label: "System Type", value: "Fortis", unit: "Pile Shoring" },
+          { label: "Tiebacks Needed", value: "0", unit: "" },
+          { label: "Patent Status", value: "Patented", unit: "System" }
+        ],
+        tags: ["Fortis Pile", "Shoring System", "Custom Fabrications", "Patented Systems", "2016"]
+      }
+    ],
+    overview: [
+      {
+        id: "overview-1",
+        title: "Microsoft Building 122 Retrofit",
+        client: "Microsoft Corporation",
+        location: "Redmond, WA",
+        challenge: "Removing post-tensioned slabs to create HVAC penetrations, skylights, and expansive atrium openings, involving over 1,200 tendons in an occupied building",
+        solution: "Specialized de-tensioning and re-anchoring process with complete resealing of post-tensioning anchors, achieving modifications without shoring the entire building",
+        results: [
+          "Improved interior lighting and workspace quality",
+          "Maintained structural integrity throughout retrofit",
+          "Minimal disruption to building operations",
+          "Featured on front of PTI magazine",
+          "2019 NAIOP WA State Redevelopment/Renovation of the Year winner",
+          "2019 DBIA National Award of Merit recipient"
+        ],
+        images: [
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1223.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1221.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1222.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/m122duriing.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/MS+new+opening.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/m122after.jpg"
+        ],
+        stats: [
+          { label: "Tendons Involved", value: "1,200+", unit: "tendons" },
+          { label: "Awards Won", value: "3", unit: "major awards" },
+          { label: "Building Occupancy", value: "100", unit: "% maintained" },
+          { label: "PTI Magazine", value: "Front", unit: "cover feature" }
+        ],
+        tags: ["Microsoft", "Large-Scale Retrofit", "Award Winner", "PTI Featured", "Live Building"]
+      }
+    ],
+    company: [
+      {
+        id: "company-1",
+        title: "Microsoft Building 122 Retrofit",
+        client: "Microsoft Corporation",
+        location: "Redmond, WA",
+        challenge: "Removing post-tensioned slabs to create HVAC penetrations, skylights, and expansive atrium openings, involving over 1,200 tendons in an occupied building",
+        solution: "Specialized de-tensioning and re-anchoring process with complete resealing of post-tensioning anchors, achieving modifications without shoring the entire building",
+        results: [
+          "Improved interior lighting and workspace quality",
+          "Maintained structural integrity throughout retrofit",
+          "Minimal disruption to building operations",
+          "Featured on front of PTI magazine",
+          "2019 NAIOP WA State Redevelopment/Renovation of the Year winner",
+          "2019 DBIA National Award of Merit recipient"
+        ],
+        images: [
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1223.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1221.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1222.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/m122duriing.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/MS+new+opening.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/m122after.jpg"
+        ],
+        stats: [
+          { label: "Tendons Involved", value: "1,200+", unit: "tendons" },
+          { label: "Awards Won", value: "3", unit: "major awards" },
+          { label: "Building Occupancy", value: "100", unit: "% maintained" },
+          { label: "PTI Magazine", value: "Front", unit: "cover feature" }
+        ],
+        tags: ["Microsoft", "Large-Scale Retrofit", "Award Winner", "PTI Featured", "Live Building"]
+      }
+    ],
     repair: [
       {
         id: "repair-1",
-        title: "Downtown Office Complex Restoration",
-        client: "Metropolitan Properties",
-        location: "Seattle, WA",
-        challenge: "Severe corrosion in post-tensioned parking garage threatening structural integrity",
-        solution: "Complete tendon replacement with corrosion mitigation system and concrete restoration",
+        title: "Microsoft Building 122 Retrofit",
+        client: "Microsoft Corporation",
+        location: "Redmond, WA",
+        challenge: "Removing post-tensioned slabs to create HVAC penetrations, skylights, and expansive atrium openings, involving over 1,200 tendons in an occupied building",
+        solution: "Specialized de-tensioning and re-anchoring process with complete resealing of post-tensioning anchors, achieving modifications without shoring the entire building",
         results: [
-          "Extended structure life by 30+ years",
-          "Prevented costly demolition",
-          "Maintained full operational capacity during repairs",
-          "Zero safety incidents during 6-month project"
+          "Improved interior lighting and workspace quality",
+          "Maintained structural integrity throughout retrofit",
+          "Minimal disruption to building operations",
+          "Featured on front of PTI magazine",
+          "2019 NAIOP WA State Redevelopment/Renovation of the Year winner",
+          "2019 DBIA National Award of Merit recipient"
         ],
         images: [
-          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/Prior+to+Repairs+starting.jpg",
-          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/Epoxy+Live+Strand+Re-Anchoring.JPG"
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1223.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1221.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1222.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/m122duriing.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/MS+new+opening.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/m122after.jpg"
         ],
         stats: [
-          { label: "Tendons Replaced", value: "240", unit: "units" },
-          { label: "Project Duration", value: "6", unit: "months" },
-          { label: "Cost Savings vs Rebuild", value: "75", unit: "%" },
-          { label: "Life Extension", value: "30+", unit: "years" }
+          { label: "Tendons Involved", value: "1,200+", unit: "tendons" },
+          { label: "Awards Won", value: "3", unit: "major awards" },
+          { label: "Building Occupancy", value: "100", unit: "% maintained" },
+          { label: "PTI Magazine", value: "Front", unit: "cover feature" }
         ],
-        tags: ["Corrosion Mitigation", "Live Scanning", "Strand Replacement"]
+        tags: ["Microsoft", "Large-Scale Retrofit", "Award Winner", "PTI Featured", "Live Building"]
       },
       {
         id: "repair-2",
-        title: "Historic Bridge Rehabilitation",
-        client: "State Department of Transportation",
-        location: "Portland, OR",
-        challenge: "Critical post-tensioning failures in 40-year-old bridge deck",
-        solution: "Precision de-tensioning and re-anchoring with upgraded materials",
+        title: "Kirkland Urban PT Building Retrofit",
+        client: "Urban Development Project",
+        location: "Kirkland, WA",
+        challenge: "Creating five stories of 20′ radius openings in existing PT deck, including 8′ x 8′ skylight for feature stair, plus elevator and stair modifications",
+        solution: "Patented system for precise tendon de-tensioning and relocation without full-scale shoring, enabling complex modifications while maintaining structural integrity",
         results: [
-          "Restored full load capacity",
-          "Improved safety ratings",
-          "Minimal traffic disruption",
-          "Enhanced durability with modern materials"
+          "Successfully created multiple large openings without structural compromise",
+          "Eliminated need for extensive shoring systems",
+          "Significant time and cost savings over traditional methods",
+          "Enabled architectural vision with complex geometric requirements"
         ],
         images: [
-          "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&h=900&fit=crop",
-          "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1600&h=900&fit=crop"
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/kirkurbmain.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/kirkurbmain2.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/openingstairvertbefore.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/openingstairverthole.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/openingstairvertafter.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/Kirkland Spiral Stair 1 Looking Down.JPG"
         ],
         stats: [
-          { label: "Bridge Length", value: "1,200", unit: "ft" },
-          { label: "Traffic Maintained", value: "95", unit: "%" },
-          { label: "Load Capacity Restored", value: "100", unit: "%" },
-          { label: "Project Completion", value: "On", unit: "time" }
+          { label: "Stories Modified", value: "5", unit: "floors" },
+          { label: "Opening Diameter", value: "20", unit: "ft" },
+          { label: "Skylight Size", value: "8×8", unit: "ft" },
+          { label: "Completion Date", value: "09/2020", unit: "" }
         ],
-        tags: ["Bridge Rehabilitation", "De-tensioning", "Traffic Management"]
+        tags: ["PT Retrofit", "Patented System", "Urban Development", "De-tensioning"]
       }
     ],
     barrier: [
       {
         id: "barrier-1",
-        title: "Highway Safety Barrier Installation",
-        client: "State Highway Authority",
-        location: "California Central Valley",
-        challenge: "High-speed corridor requiring robust barrier system for vehicle containment",
-        solution: "Custom-engineered barrier cable system with in-house manufacturing and testing",
+        title: "Microsoft Building 122 Retrofit",
+        client: "Microsoft Corporation",
+        location: "Redmond, WA",
+        challenge: "Removing post-tensioned slabs to create HVAC penetrations, skylights, and expansive atrium openings, involving over 1,200 tendons in an occupied building",
+        solution: "Specialized de-tensioning and re-anchoring process with complete resealing of post-tensioning anchors, achieving modifications without shoring the entire building",
         results: [
-          "Exceeded MASH safety standards",
-          "Reduced installation time by 40%",
-          "Enhanced vehicle containment performance",
-          "Cost-effective long-term solution"
+          "Improved interior lighting and workspace quality",
+          "Maintained structural integrity throughout retrofit",
+          "Minimal disruption to building operations",
+          "Featured on front of PTI magazine",
+          "2019 NAIOP WA State Redevelopment/Renovation of the Year winner",
+          "2019 DBIA National Award of Merit recipient"
         ],
         images: [
-          "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1600&h=900&fit=crop",
-          "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&h=900&fit=crop"
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1223.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1221.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1222.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/m122duriing.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/MS+new+opening.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/m122after.jpg"
         ],
         stats: [
-          { label: "Barrier Length", value: "5.2", unit: "miles" },
-          { label: "Installation Time Saved", value: "40", unit: "%" },
-          { label: "Safety Rating", value: "MASH", unit: "TL-3" },
-          { label: "Load Testing", value: "100", unit: "%" }
+          { label: "Tendons Involved", value: "1,200+", unit: "tendons" },
+          { label: "Awards Won", value: "3", unit: "major awards" },
+          { label: "Building Occupancy", value: "100", unit: "% maintained" },
+          { label: "PTI Magazine", value: "Front", unit: "cover feature" }
         ],
-        tags: ["MASH Compliance", "Load Testing", "Custom Manufacturing"]
+        tags: ["Microsoft", "Large-Scale Retrofit", "Award Winner", "PTI Featured", "Live Building"]
       }
     ],
     innovations: [
       {
         id: "innovation-1",
-        title: "Fortis Pile System Implementation",
-        client: "Urban Development Corp",
-        location: "San Francisco, CA",
-        challenge: "Limited space for traditional foundation systems in dense urban environment",
-        solution: "Fortis Pile system with advanced anchoring technology",
+        title: "Emerald Queen Casino Parking Garage",
+        client: "Emerald Queen Casino",
+        location: "Tacoma, WA",
+        challenge: "Shoring system needed in a tight, congested environment without the need for tiebacks or additional easement rights",
+        solution: "Implemented our patented Fortis Pile Shoring system, streamlining construction without requiring tiebacks or easement rights",
         results: [
-          "50% reduction in installation footprint",
-          "Faster project completion",
-          "Superior load-bearing capacity",
-          "Minimal site disruption"
+          "Eliminated need for tiebacks in congested site",
+          "No additional easement rights required",
+          "Streamlined construction process",
+          "Successfully managed tight space constraints",
+          "Custom fabrication met specific project needs"
         ],
         images: [
-          "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1600&h=900&fit=crop",
-          "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&h=900&fit=crop"
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/fortispilemain.png",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/fortispilemain2.png",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/fortispilemain3.png",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/fortispilemain4.png"
         ],
         stats: [
-          { label: "Footprint Reduction", value: "50", unit: "%" },
-          { label: "Load Capacity", value: "150", unit: "kips" },
-          { label: "Installation Speed", value: "3x", unit: "faster" },
-          { label: "Space Efficiency", value: "75", unit: "%" }
+          { label: "Project Year", value: "2016", unit: "" },
+          { label: "System Type", value: "Fortis", unit: "Pile Shoring" },
+          { label: "Tiebacks Needed", value: "0", unit: "" },
+          { label: "Patent Status", value: "Patented", unit: "System" }
         ],
-        tags: ["Fortis Pile", "Urban Construction", "Space Efficiency"]
+        tags: ["Fortis Pile", "Shoring System", "Custom Fabrications", "Patented Systems", "2016"]
       }
     ],
     safety: [
       {
         id: "safety-1",
-        title: "Zero-Incident Industrial Project",
-        client: "Manufacturing Facility",
-        location: "Phoenix, AZ",
-        challenge: "High-risk post-tensioning work in active industrial environment",
-        solution: "Comprehensive safety protocols with PTI-certified team and silica management",
+        title: "Microsoft Building 122 Retrofit",
+        client: "Microsoft Corporation",
+        location: "Redmond, WA",
+        challenge: "Removing post-tensioned slabs to create HVAC penetrations, skylights, and expansive atrium openings, involving over 1,200 tendons in an occupied building",
+        solution: "Specialized de-tensioning and re-anchoring process with complete resealing of post-tensioning anchors, achieving modifications without shoring the entire building",
         results: [
-          "Zero safety incidents over 8 months",
-          "100% compliance with OSHA standards",
-          "Improved worker satisfaction",
-          "Client safety award recognition"
+          "Improved interior lighting and workspace quality",
+          "Maintained structural integrity throughout retrofit",
+          "Minimal disruption to building operations",
+          "Featured on front of PTI magazine",
+          "2019 NAIOP WA State Redevelopment/Renovation of the Year winner",
+          "2019 DBIA National Award of Merit recipient"
         ],
         images: [
-          "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=1600&h=900&fit=crop",
-          "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&h=900&fit=crop"
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1223.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1221.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/ms1222.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/m122duriing.jpg",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/MS+new+opening.JPG",
+          "https://post-tension-assets-2025.s3.us-west-2.amazonaws.com/images/m122after.jpg"
         ],
         stats: [
-          { label: "Safety Incidents", value: "0", unit: "incidents" },
-          { label: "OSHA Compliance", value: "100", unit: "%" },
-          { label: "PTI Certified Staff", value: "100", unit: "%" },
-          { label: "Project Duration", value: "8", unit: "months" }
+          { label: "Tendons Involved", value: "1,200+", unit: "tendons" },
+          { label: "Awards Won", value: "3", unit: "major awards" },
+          { label: "Building Occupancy", value: "100", unit: "% maintained" },
+          { label: "PTI Magazine", value: "Front", unit: "cover feature" }
         ],
-        tags: ["PTI Certified", "OSHA Compliance", "Silica Management"]
+        tags: ["Microsoft", "Large-Scale Retrofit", "Award Winner", "PTI Featured", "Live Building"]
       }
     ]
   };
@@ -168,6 +352,33 @@ const CaseStudiesSlide: React.FC<CaseStudiesSlideProp> = ({ solutionType, onBack
   const currentCaseStudy = studies[currentStudy];
 
   const solutionConfig = {
+    main: {
+      title: "Case Studies",
+      gradient: "from-blue-400 to-emerald-600",
+      bgGradient: "from-blue-900/20 to-emerald-900/20",
+      accentColor: "blue-400",
+      accentColorDark: "blue-500",
+      accentColorBg: "blue-600/20",
+      accentColorBorder: "blue-500/30"
+    },
+    overview: {
+      title: "Overview",
+      gradient: "from-blue-400 to-purple-600",
+      bgGradient: "from-blue-900/20 to-purple-900/20",
+      accentColor: "blue-400",
+      accentColorDark: "blue-500",
+      accentColorBg: "blue-600/20",
+      accentColorBorder: "blue-500/30"
+    },
+    company: {
+      title: "Company Excellence",
+      gradient: "from-teal-400 to-green-600",
+      bgGradient: "from-teal-900/20 to-green-900/20",
+      accentColor: "teal-400",
+      accentColorDark: "teal-500",
+      accentColorBg: "teal-600/20",
+      accentColorBorder: "teal-500/30"
+    },
     repair: {
       title: "Repair & Retrofit",
       gradient: "from-emerald-400 to-emerald-600",
@@ -211,23 +422,33 @@ const CaseStudiesSlide: React.FC<CaseStudiesSlideProp> = ({ solutionType, onBack
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight" || e.key === " ") {
+        // First navigate through images in current case study
         if (currentCaseStudy && imageIndex < currentCaseStudy.images.length - 1) {
           setImageIndex(prev => prev + 1);
-        } else if (currentStudy < studies.length - 1) {
+        }
+        // Then navigate to next case study
+        else if (currentStudy < studies.length - 1) {
           setCurrentStudy(prev => prev + 1);
           setImageIndex(0);
-        } else if (onNext) {
+        }
+        // Finally, go to next slide
+        else if (onNext) {
           onNext();
         }
         e.preventDefault();
       } else if (e.key === "ArrowLeft") {
+        // First navigate back through images in current case study
         if (imageIndex > 0) {
           setImageIndex(prev => prev - 1);
-        } else if (currentStudy > 0) {
+        }
+        // Then navigate to previous case study
+        else if (currentStudy > 0) {
           setCurrentStudy(prev => prev - 1);
           const prevStudy = studies[currentStudy - 1];
-          setImageIndex(prevStudy.images.length - 1);
-        } else if (onBack) {
+          setImageIndex(prevStudy.images.length - 1); // Start at last image of previous study
+        }
+        // Finally, go back to previous slide
+        else if (onBack) {
           onBack();
         }
         e.preventDefault();
@@ -273,8 +494,17 @@ const CaseStudiesSlide: React.FC<CaseStudiesSlideProp> = ({ solutionType, onBack
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          {config.title}
-          <span className={`text-transparent bg-clip-text bg-gradient-to-r ${config.gradient}`}> Case Studies</span>
+          {solutionType === "main" ? (
+            <>
+              Our
+              <span className={`text-transparent bg-clip-text bg-gradient-to-r ${config.gradient}`}> Success Stories</span>
+            </>
+          ) : (
+            <>
+              {config.title}
+              <span className={`text-transparent bg-clip-text bg-gradient-to-r ${config.gradient}`}> Case Studies</span>
+            </>
+          )}
         </motion.h2>
         <div className="flex justify-center mt-4 gap-2">
           {studies.map((_, index) => (
@@ -297,7 +527,7 @@ const CaseStudiesSlide: React.FC<CaseStudiesSlideProp> = ({ solutionType, onBack
         <div className="max-w-7xl mx-auto h-full">
           <AnimatePresence mode="wait">
             <motion.div
-              key={`${currentStudy}-${imageIndex}`}
+              key={currentStudy}
               className="grid grid-cols-12 gap-8 h-full"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -353,27 +583,59 @@ const CaseStudiesSlide: React.FC<CaseStudiesSlideProp> = ({ solutionType, onBack
                 </div>
               </div>
 
-              {/* Center Column - Image */}
+              {/* Center Column - Image Carousel */}
               <div className="col-span-5">
                 <div className="relative h-full rounded-2xl overflow-hidden shadow-2xl bg-gray-900">
-                  <img
-                    src={currentCaseStudy.images[imageIndex]}
-                    alt={`${currentCaseStudy.title} - Image ${imageIndex + 1}`}
-                    className="w-full h-full object-cover"
-                  />
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={imageIndex}
+                      src={currentCaseStudy.images[imageIndex]}
+                      alt={`${currentCaseStudy.title} - Image ${imageIndex + 1}`}
+                      className="w-full h-full object-cover"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.4 }}
+                    />
+                  </AnimatePresence>
+                  
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
                     <h4 className="text-white text-xl font-bold">{currentCaseStudy.title}</h4>
-                    <p className="text-gray-300 text-sm">{currentCaseStudy.location}</p>
+                    <p className="text-gray-300 text-sm">
+                      {currentCaseStudy.images.length > 1 
+                        ? `${imageIndex === 0 ? 'During Construction' : 'After Completion'} (${imageIndex + 1}/${currentCaseStudy.images.length})`
+                        : currentCaseStudy.location
+                      }
+                    </p>
                   </div>
+                  
+                  {/* Image navigation arrows */}
+                  {currentCaseStudy.images.length > 1 && (
+                    <>
+                      <button
+                        onClick={() => setImageIndex(prev => prev > 0 ? prev - 1 : currentCaseStudy.images.length - 1)}
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all"
+                      >
+                        ←
+                      </button>
+                      <button
+                        onClick={() => setImageIndex(prev => prev < currentCaseStudy.images.length - 1 ? prev + 1 : 0)}
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all"
+                      >
+                        →
+                      </button>
+                    </>
+                  )}
                   
                   {/* Image indicators */}
                   {currentCaseStudy.images.length > 1 && (
                     <div className="absolute top-4 right-4 flex gap-1">
                       {currentCaseStudy.images.map((_, idx) => (
-                        <div
+                        <button
                           key={idx}
+                          onClick={() => setImageIndex(idx)}
                           className={`w-2 h-2 rounded-full transition-all ${
-                            imageIndex === idx ? `bg-${config.accentColor}-400` : 'bg-white/40'
+                            imageIndex === idx ? `bg-${config.accentColor}-400` : 'bg-white/40 hover:bg-white/60'
                           }`}
                         />
                       ))}
@@ -416,13 +678,73 @@ const CaseStudiesSlide: React.FC<CaseStudiesSlideProp> = ({ solutionType, onBack
               ← Back to {config.title}
             </button>
           )}
-          {onNext && (
-            <button
-              onClick={onNext}
-              className={`px-6 py-3 bg-${config.accentColor}-600/20 text-${config.accentColor}-400 rounded-lg hover:bg-${config.accentColor}-600/30 transition-all font-semibold border border-${config.accentColor}-500/30 hover:border-${config.accentColor}-400/50`}
-            >
-              Continue →
-            </button>
+          
+          {/* Special navigation for main case studies (after Our Approach) */}
+          {solutionType === "main" && (onSolutionsClick || onFinishClick || onRestartClick) ? (
+            <>
+              {onSolutionsClick && (
+                <button
+                  onClick={onSolutionsClick}
+                  className="px-6 py-3 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600/30 transition-all font-semibold border border-blue-500/30 hover:border-blue-400/50"
+                >
+                  View Solutions →
+                </button>
+              )}
+              {onFinishClick && (
+                <button
+                  onClick={onFinishClick}
+                  className="px-6 py-3 bg-green-600/20 text-green-400 rounded-lg hover:bg-green-600/30 transition-all font-semibold border border-green-500/30 hover:border-green-400/50"
+                >
+                  Finish Presentation
+                </button>
+              )}
+              {onRestartClick && (
+                <button
+                  onClick={onRestartClick}
+                  className="px-6 py-3 bg-purple-600/20 text-purple-400 rounded-lg hover:bg-purple-600/30 transition-all font-semibold border border-purple-500/30 hover:border-purple-400/50"
+                >
+                  ↻ Restart
+                </button>
+              )}
+            </>
+          ) :
+          /* Special navigation for company case studies (end of About Us flow) */
+          solutionType === "company" && (onSolutionsClick || onFinishClick || onRestartClick) ? (
+            <>
+              {onSolutionsClick && (
+                <button
+                  onClick={onSolutionsClick}
+                  className="px-6 py-3 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600/30 transition-all font-semibold border border-blue-500/30 hover:border-blue-400/50"
+                >
+                  View Solutions →
+                </button>
+              )}
+              {onFinishClick && (
+                <button
+                  onClick={onFinishClick}
+                  className="px-6 py-3 bg-green-600/20 text-green-400 rounded-lg hover:bg-green-600/30 transition-all font-semibold border border-green-500/30 hover:border-green-400/50"
+                >
+                  Finish Presentation
+                </button>
+              )}
+              {onRestartClick && (
+                <button
+                  onClick={onRestartClick}
+                  className="px-6 py-3 bg-purple-600/20 text-purple-400 rounded-lg hover:bg-purple-600/30 transition-all font-semibold border border-purple-500/30 hover:border-purple-400/50"
+                >
+                  ↻ Restart
+                </button>
+              )}
+            </>
+          ) : (
+            onNext && (
+              <button
+                onClick={onNext}
+                className={`px-6 py-3 bg-${config.accentColor}-600/20 text-${config.accentColor}-400 rounded-lg hover:bg-${config.accentColor}-600/30 transition-all font-semibold border border-${config.accentColor}-500/30 hover:border-${config.accentColor}-400/50`}
+              >
+                Continue →
+              </button>
+            )
           )}
         </div>
       </div>

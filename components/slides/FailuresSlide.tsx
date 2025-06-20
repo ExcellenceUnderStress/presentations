@@ -4,7 +4,11 @@ import { motion } from 'framer-motion';
 const FailuresSlide: React.FC<{ 
   onPrev?: () => void; 
   onNext?: () => void;
-}> = ({ onPrev, onNext }) => {
+  onSolutionsClick?: () => void;
+  onAboutUsClick?: () => void;
+  onFinishClick?: () => void;
+  onRestartClick?: () => void;
+}> = ({ onPrev, onNext, onSolutionsClick, onAboutUsClick, onFinishClick, onRestartClick }) => {
   const [state, setState] = useState(0); // 0: Auto-cycle through failures, 1-4: Individual failure details
   const [imageIndex, setImageIndex] = useState(0); // Track which image to show in current failure
   const [autoCycleIndex, setAutoCycleIndex] = useState(0); // For auto-cycling through failures
@@ -269,15 +273,7 @@ const FailuresSlide: React.FC<{
                 ))}
               </div>
               
-              <div className="mt-4 text-center">
-                <p className="text-gray-400 text-sm">Auto-cycling through failures • Press → to continue | ← to go back</p>
-                <div className="mt-2 text-gray-500 text-xs space-y-1">
-                  <p>Press ← to go back through failures/images</p>
-                  <p>Press Escape to return to auto-cycle mode</p>
-                  <p>Press 1-4 to jump directly to a specific failure</p>
-                  <p>Use the on-screen buttons to navigate</p>
-                </div>
-              </div>
+
             </motion.div>
           )}
 
@@ -338,14 +334,54 @@ const FailuresSlide: React.FC<{
               </div>
               
               <div className="mt-4 text-center">
-                <p className="text-gray-400 text-sm">Use ← → to navigate images and failures</p>
+                <br></br>
                 <div className="mt-2 text-gray-500 text-xs space-y-1">
-                  <p>Press ← to go back through failures/images</p>
-                  <p>Press Escape to return to auto-cycle mode</p>
-                  <p>Press 1-4 to jump directly to a specific failure</p>
-                  <p>Use the on-screen buttons to navigate</p>
+                 <br></br><br></br><br></br><br></br><br></br><br></br>
                 </div>
               </div>
+            </motion.div>
+          )}
+
+          {/* Navigation Options - Show when we have special navigation options */}
+          {(onSolutionsClick || onAboutUsClick || onFinishClick || onRestartClick) && (
+            <motion.div
+              className="absolute bottom-8 left-0 right-0 flex justify-center gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              {onFinishClick && (
+                <button
+                  onClick={onFinishClick}
+                  className="px-6 py-3 bg-green-600/20 text-green-400 rounded-lg hover:bg-green-600/30 transition-all font-semibold border border-green-500/30 hover:border-green-400/50"
+                >
+                  Finish Presentation
+                </button>
+              )}
+              {onSolutionsClick && (
+                <button
+                  onClick={onSolutionsClick}
+                  className="px-6 py-3 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600/30 transition-all font-semibold border border-blue-500/30 hover:border-blue-400/50"
+                >
+                  View Solutions →
+                </button>
+              )}
+              {onAboutUsClick && (
+                <button
+                  onClick={onAboutUsClick}
+                  className="px-6 py-3 bg-teal-600/20 text-teal-400 rounded-lg hover:bg-teal-600/30 transition-all font-semibold border border-teal-500/30 hover:border-teal-400/50"
+                >
+                  About Us →
+                </button>
+              )}
+              {onRestartClick && (
+                <button
+                  onClick={onRestartClick}
+                  className="px-6 py-3 bg-purple-600/20 text-purple-400 rounded-lg hover:bg-purple-600/30 transition-all font-semibold border border-purple-500/30 hover:border-purple-400/50"
+                >
+                  ↻ Restart
+                </button>
+              )}
             </motion.div>
           )}
         </motion.div>

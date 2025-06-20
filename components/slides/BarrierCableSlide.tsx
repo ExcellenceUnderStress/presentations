@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const BarrierCableSlide: React.FC<{ onBack?: () => void; onNext?: () => void }> = ({ onBack, onNext }) => {
+const BarrierCableSlide: React.FC<{ 
+  onBack?: () => void; 
+  onNext?: () => void;
+  onRestartClick?: () => void;
+  onFailuresClick?: () => void;
+  onCaseStudiesClick?: () => void;
+  onFinishClick?: () => void;
+}> = ({ onBack, onNext, onRestartClick, onFailuresClick, onCaseStudiesClick, onFinishClick }) => {
   const [scene, setScene] = useState(0); // 0: intro boxes, 1-3: detail scenes
   const [imageIndex, setImageIndex] = useState(0); // Track which image to show in current scene
 
@@ -250,6 +257,49 @@ const BarrierCableSlide: React.FC<{ onBack?: () => void; onNext?: () => void }> 
                 />
               ))}
             </div>
+
+            {/* Navigation Options */}
+            {(onRestartClick || onFailuresClick || onCaseStudiesClick || onFinishClick) && (
+              <motion.div
+                className="flex justify-center gap-4 mt-8 flex-wrap"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+              >
+                {onRestartClick && (
+                  <button
+                    onClick={onRestartClick}
+                    className="px-6 py-3 bg-purple-600/20 text-purple-400 rounded-lg hover:bg-purple-600/30 transition-all font-semibold border border-purple-500/30 hover:border-purple-400/50"
+                  >
+                    ↻ Restart
+                  </button>
+                )}
+                {onFailuresClick && (
+                  <button
+                    onClick={onFailuresClick}
+                    className="px-6 py-3 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600/30 transition-all font-semibold border border-red-500/30 hover:border-red-400/50"
+                  >
+                    View Failures →
+                  </button>
+                )}
+                {onCaseStudiesClick && (
+                  <button
+                    onClick={onCaseStudiesClick}
+                    className="px-6 py-3 bg-teal-600/20 text-teal-400 rounded-lg hover:bg-teal-600/30 transition-all font-semibold border border-teal-500/30 hover:border-teal-400/50"
+                  >
+                    Case Studies →
+                  </button>
+                )}
+                {onFinishClick && (
+                  <button
+                    onClick={onFinishClick}
+                    className="px-6 py-3 bg-green-600/20 text-green-400 rounded-lg hover:bg-green-600/30 transition-all font-semibold border border-green-500/30 hover:border-green-400/50"
+                  >
+                    Finish Presentation
+                  </button>
+                )}
+              </motion.div>
+            )}
           </div>
         )}
       </div>

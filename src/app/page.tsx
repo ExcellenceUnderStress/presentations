@@ -22,10 +22,11 @@ const RepairRetrofitSlide = lazy(() => import("../../components/slides/RepairRet
 const BarrierCableSlide = lazy(() => import("../../components/slides/BarrierCableSlide"));
 const InnovationsSlide = lazy(() => import("../../components/slides/InnovationsSlide"));
 const SafetySlide = lazy(() => import("../../components/slides/SafetySlide"));
+const DustManagementSlide = lazy(() => import("../../components/slides/DustManagementSlide"));
 const CaseStudiesSlide = lazy(() => import("../../components/slides/CaseStudiesSlide"));
 
 // Type definitions
-type SolutionType = "overview" | "company" | "repair" | "innovations" | "barrier" | "safety";
+type SolutionType = "main" | "overview" | "company" | "repair" | "innovations" | "barrier" | "safety";
 
 interface CommonSlideProps {
   onNext?: () => void;
@@ -67,53 +68,57 @@ const slides: SlideConfig[] = [
   { Component: WhyPostTensioning3Slide },
   { Component: CriticalSlide },
   { Component: FailuresSlide },
-  { Component: CaseStudiesSlide, props: { solutionType: "overview" } },
   { Component: OurProcessSlide },
+  { Component: CaseStudiesSlide, props: { solutionType: "main" } },
   { Component: CoreSolutionsSlide },
   { Component: AboutUsSlide },
-  { Component: LegacySlide },
-  { Component: CaseStudiesSlide, props: { solutionType: "company" } },
   { Component: InnovationsSlide },
   { Component: BarrierCableSlide },
   { Component: RepairRetrofitSlide },
   { Component: SafetySlide },
-  { Component: CaseStudiesSlide, props: { solutionType: "repair" } },
-  { Component: CaseStudiesSlide, props: { solutionType: "innovations" } },
+  { Component: DustManagementSlide },
+  { Component: CaseStudiesSlide, props: { solutionType: "company" } }, // 17: Company case studies
 ];
 
 export default function PresentationPage() {
   const [current, setCurrent] = useState(0);
-  const [lastVisited, setLastVisited] = useState<number | undefined>(undefined);
+  const [navigationHistory, setNavigationHistory] = useState<number[]>([0]);
 
   React.useEffect(() => {
     optimizeAnimations();
   }, []);
 
-  // Track last visited slide (simplified)
-  const prevCurrentRef = React.useRef(current);
-  React.useEffect(() => {
-    const prevSlide = prevCurrentRef.current;
-    if (prevSlide !== current) {
-      setLastVisited(prevSlide);
-    }
-    prevCurrentRef.current = current;
-  }, [current]);
-
   const goTo = useCallback((idx: number) => {
-    if (idx >= 0 && idx < slides.length) setCurrent(idx);
+    if (idx >= 0 && idx < slides.length) {
+      setCurrent(idx);
+      // Add to navigation history if it's not a back navigation
+      setNavigationHistory(prev => {
+        const newHistory = [...prev];
+        // If we're not going back to the previous item in history
+        if (newHistory[newHistory.length - 1] !== idx) {
+          newHistory.push(idx);
+        }
+        return newHistory;
+      });
+    }
   }, [slides.length]);
 
   const goNext = useCallback(() => goTo(current + 1), [current, goTo]);
   const goPrev = useCallback(() => goTo(current - 1), [current, goTo]);
   
-  // Simplified goBack - just go to lastVisited or goPrev
+  // Enhanced goBack - use navigation history
   const goBack = useCallback(() => {
-    if (lastVisited !== undefined && lastVisited !== current) {
-      setCurrent(lastVisited);
-    } else {
-      goPrev();
-    }
-  }, [lastVisited, current, goPrev]);
+    setNavigationHistory(prev => {
+      if (prev.length > 1) {
+        const newHistory = [...prev];
+        newHistory.pop(); // Remove current
+        const previousSlide = newHistory[newHistory.length - 1];
+        setCurrent(previousSlide);
+        return newHistory;
+      }
+      return prev;
+    });
+  }, []);
 
   const slideProps = useMemo<Record<string, any>[]>(
     () => [
@@ -122,44 +127,92 @@ export default function PresentationPage() {
       {
         onPrev: goPrev,
         onOverviewClick: () => goTo(3),
-        onAboutUsClick: () => goTo(8),
-        onInnovationClick: () => goTo(14),
+        onAboutUsClick: () => goTo(11),
+        onInnovationClick: () => goTo(12),
       }, // 2: IntroductionHubSlide
-      { onPrev: () => goTo(2), onNext: goNext, onJumpToSolutions: () => goTo(9) }, // 3: WhyPostTensioning1Slide
-      { onPrev: goPrev, onNext: goNext, onJumpToSolutions: () => goTo(9) }, // 4: WhyPostTensioning2Slide
-      { onPrev: goPrev, onNext: goNext, onJumpToSolutions: () => goTo(9) }, // 5: WhyPostTensioning3Slide
+      { onPrev: () => goTo(2), onNext: goNext, onJumpToSolutions: () => goTo(10) }, // 3: WhyPostTensioning1Slide
+      { onPrev: goPrev, onNext: goNext, onJumpToSolutions: () => goTo(10) }, // 4: WhyPostTensioning2Slide
+      { onPrev: goPrev, onNext: goNext, onJumpToSolutions: () => goTo(10) }, // 5: WhyPostTensioning3Slide
       {
         onPrev: goPrev,
         onNext: () => goTo(7), // Keyboard navigation goes to FailuresSlide
         onSilentRisksClick: () => goTo(10),
         onHiddenDamageClick: () => goTo(10),
         onJumpToSolutions: () => goTo(10),
-        onNavigateToRepair: () => goTo(16), // Click navigation goes directly to RepairRetrofitSlide
+        onNavigateToRepair: () => goTo(14), // Click navigation goes directly to RepairRetrofitSlide
         onNavigateToFailures: () => goTo(7), // Click navigation goes to FailuresSlide
       }, // 6: CriticalSlide
       {
         onPrev: goPrev,
-        onNext: () => goTo(10), // Go to CoreSolutionsSlide after viewing all failures
+        onNext: () => goTo(8), // Go to OurProcessSlide after viewing all failures
+        onSolutionsClick: () => goTo(10), // CoreSolutionsSlide
+        onAboutUsClick: () => goTo(11), // AboutUsSlide
+        onCaseStudiesClick: () => goTo(9), // CaseStudiesSlide (main)
+        onFinishClick: () => goTo(0), // WelcomeSlide
+        onRestartClick: () => goTo(2), // IntroductionHubSlide
       }, // 7: FailuresSlide
-      { onBack: goBack, onNext: () => goTo(9) }, // 8: CaseStudiesSlide (overview)
-      { onPrev: goPrev, onNext: goNext }, // 9: OurProcessSlide
+      { onPrev: goPrev, onNext: () => goTo(9) }, // 8: OurProcessSlide
+      { 
+        onBack: () => goTo(8), 
+        onNext: () => goTo(10),
+        onSolutionsClick: () => goTo(10), 
+        onFinishClick: () => goTo(0), 
+        onRestartClick: () => goTo(2) 
+      }, // 9: CaseStudiesSlide (main)
       {
         onPrev: goPrev,
-        onRepairClick: () => goTo(16),
-        onBarrierClick: () => goTo(15),
-        onInnovationsClick: () => goTo(14),
-        onSafetyClick: () => goTo(17),
-        onNext: goNext,
+        onRepairClick: () => goTo(14),
+        onBarrierClick: () => goTo(13),
+        onInnovationsClick: () => goTo(12),
+        onSafetyClick: () => goTo(15),
+        onNext: () => goTo(14), // Go to RepairRetrofitSlide
       }, // 10: CoreSolutionsSlide
-      { onPrev: goPrev, onNext: goNext }, // 11: AboutUsSlide
-              { onPrev: goPrev, onNext: goNext, onVideoEnd: goNext }, // 12: LegacySlide (duplicate)
-      { onBack: goBack, onNext: () => goTo(14) }, // 13: CaseStudiesSlide (company)
-      { onBack: goBack, onNext: goNext }, // 14: InnovationsSlide
-      { onBack: goBack, onNext: goNext }, // 15: BarrierCableSlide
-      { onBack: goBack, onNext: goNext }, // 16: RepairRetrofitSlide
-      { onBack: goBack, onNext: goNext }, // 17: SafetySlide
-      { onBack: goBack, onNext: goNext }, // 18: CaseStudiesSlide (repair)
-      { onBack: goBack, onNext: () => goTo(2) }, // 19: CaseStudiesSlide (innovations) - final slide, return to hub
+      { onPrev: goBack, onNext: () => goTo(8), onCaseStudiesClick: () => goTo(17) }, // 11: AboutUsSlide
+      { 
+        onBack: goBack, 
+        onNext: () => goTo(15), // Go to SafetySlide
+        onRestartClick: () => goTo(2), // IntroductionHubSlide
+        onFailuresClick: () => goTo(7), // FailuresSlide
+        onCaseStudiesClick: () => goTo(9), // CaseStudiesSlide (main)
+        onFinishClick: () => goTo(0), // WelcomeSlide
+      }, // 12: InnovationsSlide
+      { 
+        onBack: goBack, 
+        onNext: () => goTo(12), // Go to InnovationsSlide
+        onRestartClick: () => goTo(2), // IntroductionHubSlide
+        onFailuresClick: () => goTo(7), // FailuresSlide
+        onCaseStudiesClick: () => goTo(9), // CaseStudiesSlide (main)
+        onFinishClick: () => goTo(0), // WelcomeSlide
+      }, // 13: BarrierCableSlide
+      { 
+        onBack: goBack, 
+        onNext: () => goTo(13), // Go to BarrierCableSlide
+        onRestartClick: () => goTo(2), // IntroductionHubSlide
+        onCaseStudiesClick: () => goTo(9), // CaseStudiesSlide (main)
+        onFinishClick: () => goTo(0), // WelcomeSlide
+      }, // 14: RepairRetrofitSlide
+      { 
+        onBack: goBack, 
+        onNext: () => goTo(16), // Go to DustManagementSlide
+        onRestartClick: () => goTo(2), // IntroductionHubSlide
+        onFailuresClick: () => goTo(7), // FailuresSlide
+        onCaseStudiesClick: () => goTo(9), // CaseStudiesSlide (main)
+        onFinishClick: () => goTo(0), // WelcomeSlide
+      }, // 15: SafetySlide
+      { 
+        onBack: goBack, 
+        onNext: () => goTo(0), // Finish - go to WelcomeSlide
+        onRestartClick: () => goTo(2), // IntroductionHubSlide
+        onFailuresClick: () => goTo(7), // FailuresSlide
+        onCaseStudiesClick: () => goTo(9), // CaseStudiesSlide (main)
+        onFinishClick: () => goTo(0), // WelcomeSlide
+      }, // 16: DustManagementSlide
+      { 
+        onBack: goBack,
+        onSolutionsClick: () => goTo(10), // CoreSolutionsSlide
+        onFinishClick: () => goTo(0), // WelcomeSlide
+        onRestartClick: () => goTo(2), // IntroductionHubSlide
+      }, // 17: CaseStudiesSlide (company)
     ],
     [goNext, goPrev, goTo, goBack]
   );
@@ -173,7 +226,7 @@ export default function PresentationPage() {
   return (
     <div className="relative w-full h-[100dvh] overflow-hidden">
       {current > 0 && (
-        <BadgeGroup currentSlide={current} lastVisitedSlide={lastVisited} onBadgeClick={goTo} />
+        <BadgeGroup currentSlide={current} lastVisitedSlide={navigationHistory[navigationHistory.length - 2]} onBadgeClick={goTo} />
       )}
       <Suspense
         fallback={

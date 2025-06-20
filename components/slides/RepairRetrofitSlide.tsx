@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const RepairRetrofitSlide: React.FC<{ onBack?: () => void; onNext?: () => void }> = ({ onBack, onNext }) => {
+const RepairRetrofitSlide: React.FC<{ 
+  onBack?: () => void; 
+  onNext?: () => void;
+  onRestartClick?: () => void;
+  onFinishClick?: () => void;
+}> = ({ onBack, onNext, onRestartClick, onFinishClick }) => {
   const [scene, setScene] = useState(0); // 0: intro boxes, 1-4: detail scenes
   const [imageIndex, setImageIndex] = useState(0); // Track which image to show in current scene
 
@@ -210,7 +215,13 @@ const RepairRetrofitSlide: React.FC<{ onBack?: () => void; onNext?: () => void }
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 + index * 0.1, duration: 0.6 }}
                 >
-                  <div className="text-4xl mb-4">{feature.icon}</div>
+                  <div className="w-16 h-16 mb-4 flex items-center justify-center">
+                    <img 
+                      src={feature.icon} 
+                      alt={`${feature.title} icon`}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
                   <h3 className="text-2xl font-bold text-emerald-400 mb-3">{feature.title}</h3>
                   <p className="text-gray-300">{feature.description}</p>
                 </motion.div>
@@ -306,6 +317,33 @@ const RepairRetrofitSlide: React.FC<{ onBack?: () => void; onNext?: () => void }
                 />
               ))}
             </div>
+
+            {/* Navigation Options - Show when we have special navigation options */}
+            {(onRestartClick || onFinishClick) && (
+              <motion.div
+                className="flex justify-center gap-4 mt-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+              >
+                {onRestartClick && (
+                  <button
+                    onClick={onRestartClick}
+                    className="px-6 py-3 bg-purple-600/20 text-purple-400 rounded-lg hover:bg-purple-600/30 transition-all font-semibold border border-purple-500/30 hover:border-purple-400/50"
+                  >
+                    ↻ Restart
+                  </button>
+                )}
+                {onFinishClick && (
+                  <button
+                    onClick={onFinishClick}
+                    className="px-6 py-3 bg-green-600/20 text-green-400 rounded-lg hover:bg-green-600/30 transition-all font-semibold border border-green-500/30 hover:border-green-400/50"
+                  >
+                    Finish Presentation
+                  </button>
+                )}
+              </motion.div>
+            )}
           </div>
         )}
       </div>
